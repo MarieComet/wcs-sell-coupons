@@ -5,6 +5,13 @@
  */
 /*
 Plugin Name: WooCommerce Sell Coupons
+Plugin URI: https://github.com/MarieComet/wcs-sell-coupons
+Description: This plugin create a new WooCommerce product type and add possibilty to sell Coupons as Gift Card in front-office.
+Version: 1.0
+Author: Marie Comet
+Author URI: www.mariecomet.fr/
+License: GPLv2 or later
+Text Domain: wsc
 */
 /**
  * Register the custom product type after init
