@@ -66,10 +66,11 @@ if ( in_array( 'woocommerce/woocommerce.php', apply_filters( 'active_plugins', g
                 foreach ( $terms as $term ) {
                     if($term->slug === 'gift_coupon') {
                         return true;
+                    } else {
+                        return false;
                     }
                 }
             }
-            return false;
         }
 
         // Add a custom class to our custom product type. WooCommerce don't do that automatically.
