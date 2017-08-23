@@ -38,8 +38,16 @@ if ( in_array( 'woocommerce/woocommerce.php', apply_filters( 'active_plugins', g
             }
         }
 
-        public function __construct() {
+        public function wcs_admin_notices() {
+            ?>
+            <div class="notice notice-success is-dismissible">
+                <p><?php _e( 'Please visit WooCommerce > Settings > General to setup WooCommerce Sell Coupons !', 'wcs' ); ?></p>
+            </div>
+            <?php
+        }
 
+        public function __construct() {
+            add_action('admin_notices', array($this, 'wcs_admin_notices'));
             add_action('wp_enqueue_scripts', array( $this, 'wcs_register_plugin_styles' ) );
             // Add custom option field in woocommerce general setting
             add_filter( 'woocommerce_general_settings', array($this, 'wc_coupon_setting_page'));
@@ -400,4 +408,3 @@ if ( in_array( 'woocommerce/woocommerce.php', apply_filters( 'active_plugins', g
     }
     Woo_Sell_Coupons::register();
 }
-?>
