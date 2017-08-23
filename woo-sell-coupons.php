@@ -6,7 +6,7 @@
 /*
 Plugin Name: WooCommerce Sell Coupons
 Plugin URI: https://github.com/MarieComet/wcs-sell-coupons
-Description: This plugin create a new WooCommerce product type and add possibilty to sell Coupons as Gift Card in front-office.
+Description: This plugin create a new WooCommerce product type and add possibilty to sell Coupons as Gift Card in front-office. Please visit WooCommerce > Settings > General once activated !
 Version: 1.0
 Author: Marie Comet
 Author URI: www.mariecomet.fr/
@@ -39,10 +39,10 @@ if ( in_array( 'woocommerce/woocommerce.php', apply_filters( 'active_plugins', g
         }
 
         public function __construct() {
-            add_filter('post_class', array($this, 'wcs_product_type_class' ));
+
             add_action('wp_enqueue_scripts', array( $this, 'wcs_register_plugin_styles' ) );
-            add_filter('woocommerce_quantity_input_max', array($this, 'wcs_remove_qty_input'), 10, 2);
-            add_filter('woocommerce_cart_item_quantity', array($this, 'wcs_remove_cart_qty_input'), 10, 3);
+            // Add custom option field in woocommerce general setting
+            add_filter( 'woocommerce_general_settings', array($this, 'wc_coupon_setting_page'));
             add_action('woocommerce_before_add_to_cart_button', array($this, 'wcs_email_friend'), 10);
             add_action('woocommerce_add_to_cart_validation', array($this, 'wcs_check_custom_fields'), 10, 5 );         
             add_action('wp_ajax_custom_data', array($this, 'wcs_custom_data_callback'));
@@ -52,6 +52,7 @@ if ( in_array( 'woocommerce/woocommerce.php', apply_filters( 'active_plugins', g
             add_filter('woocommerce_cart_item_name', array($this, 'wcs_add_user_custom_session'),1,3);
             add_filter('woocommerce_order_item_name', array($this, 'wcs_woocommerce_order_custom_session'), 10, 3 );
             add_action('woocommerce_add_order_item_meta', array($this, 'wcs_add_values_to_order_item_meta'),1,2);
+            add_filter('woocommerce_order_item_display_meta_key', array($this, 'wcs_add_order_formatted_key'), 10, 2);
             add_action('woocommerce_before_cart_item_quantity_zero',array($this, 'wcs_remove_user_custom_data_options_from_cart') ,1,1);
             add_action('woocommerce_order_status_completed', array($this, 'wcs_create_coupon_on_order_complete') );
         }
@@ -73,16 +74,6 @@ if ( in_array( 'woocommerce/woocommerce.php', apply_filters( 'active_plugins', g
             }
         }
 
-        // Add a custom class to our custom product type. WooCommerce don't do that automatically.
-        function wcs_product_type_class( $classes ) {
-            global $post;
-
-            if( $this->check_if_coupon_gift($post->ID)) {
-                $classes[] = 'product-coupon-gift';
-            }
-            return $classes;
-        }
-
         /**
          * Register and enqueue style sheet.
          */
@@ -92,31 +83,36 @@ if ( in_array( 'woocommerce/woocommerce.php', apply_filters( 'active_plugins', g
         }
 
         /**
-        * Set a quantity input max value on the product page
-        * Need to do that because we need to add ONE email and name friend for EACH product
-        * Hooked on woocommerce_quantity_input_max see WooCommerce docs.
-        * @param int  $var   The max quantity
-        * @param mixed  $product   The current product
-        */
-        function wcs_remove_qty_input($var, $product) {
-            if( $this->check_if_coupon_gift($product->ID)) {
-                $var = '1';
-            }
-            return $var;
+         * Add custom option field in woocommerce general setting
+         * Hooked on woocommerce_general_settings
+         * @return array
+         */
+        function wc_coupon_setting_page($settings) {
+            $settings[] = array( 'name' => __( 'Bons cadeaux', 'wcs' ), 'type' => 'title', 'desc' => '', 'id' => 'wcs_gift_coupon' );
 
-        }
+            $settings[] = array(
+                'title'     => __( 'Durée des bons cadeaux', 'wcs' ),
+                'desc'      => '',
+                'id'        => 'wcs_gift_coupon_duration',
+                'desc_tip'      => __( 'La durée limite des bons cadeaux (en jours)', 'wcs' ),
+                'type'      => 'number',
+                'default'   => '',
+                'css'      => 'min-width:300px;',
+                'placeholder' => __( '30', 'textdomain' ),
+            );
+            $settings[] = array(
+                'title'     => __( 'Préfixe des codes bons cadeaux', 'wcs' ),
+                'desc'      => '',
+                'id'        => 'wcs_gift_coupon_prefix',
+                'desc_tip'      => __( 'Le préfixe utilisé dans les codes promos', 'wcs' ),
+                'type'      => 'text',
+                'default'   => '',
+                'css'      => 'min-width:300px;',
+                'placeholder' => __( 'GF', 'textdomain' ),
+            );
 
-        /**
-        * Set a quantity input max value on the cart page
-        * Need to do that because we need to add ONE email and name friend for EACH product
-        * Hooked on woocommerce_cart_item_quantity see WooCommerce docs.
-        */
-         function wcs_remove_cart_qty_input($produc_quantity, $cart_item_key, $cart_item) {
-            if( $this->check_if_coupon_gift($cart_item['product_id'])) {
-                $var = '1';
-            }
-            return $var;
-
+            $settings[] = array( 'type' => 'sectionend', 'id' => 'wcs_gift_coupon');
+            return $settings;
         }
 
         /**
@@ -199,7 +195,7 @@ if ( in_array( 'woocommerce/woocommerce.php', apply_filters( 'active_plugins', g
         */
         function wcs_add_user_custom_session($product_name, $values, $cart_item_key ) {
             if( $this->check_if_coupon_gift($values['product_id'] ) && isset($values['wcs_name_friend']) && isset($values['wcs_email_friend'])) {
-                $return_string = $product_name . "<br />" . $values['wcs_name_friend'] . "<br />" . $values['wcs_email_friend'];
+                $return_string = $product_name . "</br><span>Destinataire : " . $values['wcs_name_friend'] . "</span></br><span>E-mail : " . $values['wcs_email_friend'] . '</span>';
                 return $return_string;
             } else {
                 return $product_name;
@@ -222,7 +218,7 @@ if ( in_array( 'woocommerce/woocommerce.php', apply_filters( 'active_plugins', g
         /**
         *   Add our custom fields values as order item values, it can be seen in the order admin page and we can get it later
         *   Hooked on woocommerce_add_order_item_meta
-        */       
+        */
         function wcs_add_values_to_order_item_meta($item_id, $values) {
             global $woocommerce,$wpdb;
 
@@ -233,6 +229,21 @@ if ( in_array( 'woocommerce/woocommerce.php', apply_filters( 'active_plugins', g
             }
         }
         
+        /**
+        *   Add $display_key for display it in admin
+        *   Hooked on woocommerce_order_item_display_meta_key
+        */
+        function wcs_add_order_formatted_key($display_key, $meta) {
+
+            if($meta->key === '_name_to') {
+                $display_key = 'Destinaire ';
+            }
+            if($meta->key === '_mail_to') {
+                $display_key = 'E-mail destinaire ';
+            }
+            return $display_key;
+        }
+
         /**
         *   Remove the cart content custom values when a product is deleted
         *   Hooked on woocommerce_before_cart_item_quantity_zero
@@ -260,6 +271,20 @@ if ( in_array( 'woocommerce/woocommerce.php', apply_filters( 'active_plugins', g
             // Get each product in order.
             $order_items =  $order->get_items(); 
 
+            $duration_gift_coupon = get_option('wcs_gift_coupon_duration');
+            $prefix_gift_coupon = get_option('wcs_gift_coupon_prefix');
+
+            if( !empty($duration_gift_coupon) ) {
+                $today = time();
+
+                $expiry_date = date('d-m-Y', strtotime("+".$duration_gift_coupon." days", $today));
+                $date_expire = strtotime("+".$duration_gift_coupon." days", $today);
+
+            } else { // default 30 days
+                $expiry_date = date('d-m-Y', strtotime("+30 days", $today));
+                $date_expire = strtotime("+30 days", $today);
+            }
+
             foreach($order_items as $order_product_detail => $values ) {
 
                 // check if the product is a gift_coupon !
@@ -277,8 +302,8 @@ if ( in_array( 'woocommerce/woocommerce.php', apply_filters( 'active_plugins', g
                     $product_price = $product->get_price();
 
                     // Get the custom order values : friend and email 
-                    $friend_email = $values['item_meta']['_mail_to']['0'];
-                    $friend_name = $values['item_meta']['_name_to']['0'];
+                    $friend_email = $values['item_meta']['_mail_to'];
+                    $friend_name = $values['item_meta']['_name_to'];
 
                     // Generate a random code
                     $coupon_code = $this->wsc_random_number();
@@ -288,7 +313,7 @@ if ( in_array( 'woocommerce/woocommerce.php', apply_filters( 'active_plugins', g
 
                     // Construct our coupon post
                     $coupon = array(
-                        'post_title' => $coupon_code,
+                        'post_title' => $prefix_gift_coupon.'_'.$coupon_code,
                         'post_content' => '',
                         'post_excerpt' => 'Pour: ' . $friend_name . ' - Envoyé à: '. $friend_email,
                         'post_status' => 'publish',
@@ -301,17 +326,23 @@ if ( in_array( 'woocommerce/woocommerce.php', apply_filters( 'active_plugins', g
                         $new_coupon_id = $coupon_code;          
                         update_post_meta( $new_coupon_id, 'discount_type', $discount_type );
                         update_post_meta( $new_coupon_id, 'coupon_amount', $amount );
+                        update_post_meta( $new_coupon_id, 'expiry_date', $expiry_date);
+                        update_post_meta( $new_coupon_id, 'date_expire', $date_expire);
                         update_post_meta( $new_coupon_id, 'individual_use', 'yes' );
                         update_post_meta( $new_coupon_id, 'usage_limit', '1' );
                         update_post_meta( $new_coupon_id, 'usage_limit_per_user', '1' );
+                        update_post_meta($new_coupon_id, 'limit_usage_to_x_items', '1');
                     // If not, create a new coupon post !
                     } else {
                         $new_coupon_id = wp_insert_post( $coupon );
                         update_post_meta( $new_coupon_id, 'discount_type', $discount_type );
                         update_post_meta( $new_coupon_id, 'coupon_amount', $amount );
+                        update_post_meta( $new_coupon_id, 'expiry_date', $expiry_date);
+                        update_post_meta( $new_coupon_id, 'date_expire', $date_expire);
                         update_post_meta( $new_coupon_id, 'individual_use', 'yes' );
                         update_post_meta( $new_coupon_id, 'usage_limit', '1' );
                         update_post_meta( $new_coupon_id, 'usage_limit_per_user', '1' );
+                        update_post_meta($new_coupon_id, 'limit_usage_to_x_items', '1');
                     }
 
                     // Finally send an email to the receiver with the coupon ID, client name, receiver email and name
@@ -325,6 +356,7 @@ if ( in_array( 'woocommerce/woocommerce.php', apply_filters( 'active_plugins', g
 
             // Get the coupon code amount
             $counpon_amount = get_post_meta($post, 'coupon_amount', true);
+            $coupon_expire = get_post_meta($post, 'expiry_date', true);
 
             // Construct email datas
             $blogname       = wp_specialchars_decode(get_option('blogname'), ENT_QUOTES);
@@ -345,7 +377,10 @@ if ( in_array( 'woocommerce/woocommerce.php', apply_filters( 'active_plugins', g
             $email_heading  = __( 'Votre chèque cadeau à utiliser sur ', 'rpgiftcards' ) . '<a href="' . $blogurl .'">'. $blogname . '</a>';
             $toEmail        = $email;
 
-            $theMessage     = '<h2>Bonjour ' . $name . ',</h2><p>'. $client_name . ' vous offre un chèque cadeau de '. $counpon_amount . '€ à utiliser sur <a href="' . $blogurl .'">'. $blogname . '</a>.</p></br><p>Pour l\'utiliser entrez ce code: <bold>' . get_the_title($post) . '</bold> dans votre panier lors de votre achat.</p><h3>A  bientôt sur <a href="' . $blogurl .'">'. $blogname . '</a> !';
+            $theMessage     = '<h2>Bonjour ' . $name . ',</h2><p>'. $client_name . ' vous offre un chèque cadeau de '. $counpon_amount . '€ à utiliser sur <a href="' . $blogurl .'">'. $blogname . '</a>.</p></br>
+            <p>Pour l\'utiliser entrez ce code: <bold>' . get_the_title($post) . '</bold> dans votre panier lors de votre achat.</p>
+            <p>Attention, ce chèque cadeau est valable seulement jusqu\'au '.$coupon_expire.' !</p>
+            <h3>A  bientôt sur <a href="' . $blogurl .'">'. $blogname . '</a> !</h3>';
 
             echo $mailer->wrap_message( $email_heading, $theMessage );
 
