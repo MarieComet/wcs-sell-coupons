@@ -254,10 +254,10 @@ if ( in_array( 'woocommerce/woocommerce.php', apply_filters( 'active_plugins', g
         function wcs_add_order_formatted_key($display_key, $meta) {
 
             if($meta->key === '_name_to') {
-                $display_key = 'Destinaire ';
+                $display_key = __('Destinataire', 'wcs-sell-coupons');
             }
             if($meta->key === '_mail_to') {
-                $display_key = 'E-mail destinaire ';
+                $display_key = __('E-mail', 'wcs-sell-coupons');
             }
             return $display_key;
         }
@@ -377,7 +377,7 @@ if ( in_array( 'woocommerce/woocommerce.php', apply_filters( 'active_plugins', g
             // Construct email datas
             $blogname       = wp_specialchars_decode(get_option('blogname'), ENT_QUOTES);
             $blogurl        = wp_specialchars_decode(get_option('home'), ENT_QUOTES);
-            $subject        = '[' . $blogname . '] ' . $client_name . __(' vous offre un chèque cadeau !', 'wcs-sell-coupons' ) ;
+            $subject        = '[' . $blogname . '] ' . $client_name . ' ' . __(' vous offre un chèque cadeau !', 'wcs-sell-coupons' ) ;
             $sendEmail      = get_bloginfo( 'admin_email' );
             $headers        = array('Content-Type: text/html; charset=UTF-8');
 
