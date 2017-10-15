@@ -390,8 +390,8 @@ if ( in_array( 'woocommerce/woocommerce.php', apply_filters( 'active_plugins', g
             $email_heading  = __( 'Votre chèque cadeau à utiliser sur ', 'wcs-sell-coupons' ) . ' <a href="' . $blogurl .'">'. $blogname . '</a>';
             $toEmail        = $email;
             $formatted_price = wc_price($coupon_amount);
-            $theMessage     = '<h2>' . __('Bonjour ', 'wcs-sell-coupons' ) . $name . ',</h2><p>'. $client_name . 
-                   __(' vous offre un chèque cadeau de ', 'wcs-sell-coupons' ) . ' ' . $formatted_price . 
+            $theMessage     = '<h2>' . __('Bonjour ', 'wcs-sell-coupons' ) . ' ' . $name . ',</h2><p>'. $client_name . ' ' .
+                   __(' vous offre un chèque cadeau de ', 'wcs-sell-coupons' ) . ' ' . $formatted_price . ' ' .
                    __(' à utiliser sur ', 'wcs-sell-coupons') . ' <a href="' . $blogurl .'">'. $blogname . '</a>.</p></br>
             <p>' . __("Pour l'utiliser entrez ce code: ", 'wcs-sell-coupons' ) . 
                 '<strong>' . get_the_title($post) . '</strong> ' . 
