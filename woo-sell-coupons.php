@@ -315,7 +315,7 @@ if ( in_array( 'woocommerce/woocommerce.php', apply_filters( 'active_plugins', g
 
                     // Get the product price (gift amount)
                     $product = wc_get_product($values['product_id']);
-                    $product_price = $product->get_price();
+                    $product_price = $product->get_regular_price('edit');
 
                     // Get the custom order values : friend and email 
                     $friend_email = $values['item_meta']['_mail_to'];
@@ -392,7 +392,8 @@ if ( in_array( 'woocommerce/woocommerce.php', apply_filters( 'active_plugins', g
 
             $email_heading  = __( 'Votre chèque cadeau à utiliser sur ', 'wcs-sell-coupons' ) . ' <a href="' . $blogurl .'">'. $blogname . '</a>';
             $toEmail        = $email;
-            $formatted_price = wc_price($coupon_amount);
+            //coupons are in shop base currency not current user/order currency so get unfiltered base ccy
+            $formatted_price = wc_price($coupon_amount, array('currency' => get_option( 'woocommerce_currency' ), ));
             
             //use post name (slug) as coupon code
             //TODO: error strategy if coupon could not be retrieved correctly?
