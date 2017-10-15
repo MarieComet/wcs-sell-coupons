@@ -169,11 +169,14 @@ if ( in_array( 'woocommerce/woocommerce.php', apply_filters( 'active_plugins', g
         *   Hooked on woocommerce_add_to_cart_validation
         */
         function wcs_check_custom_fields($passed, $product_id, $quantity) {
-            if( $this->check_if_coupon_gift($product_id ) && !empty($_POST['wcs_email_friend']) && !empty($_POST['wcs_name_friend'])) {
-                $passed = true;
+            if( $this->check_if_coupon_gift($product_id ) )
+                if (!empty($_POST['wcs_email_friend']) && !empty($_POST['wcs_name_friend'])) {
+                    $passed = true;
+                } else {
+                    wc_add_notice( __( 'Renseignez les champs obligatoires.', 'wcs-sell-coupons' ), 'error' );
+                    $passed = false;
             } else {
-                wc_add_notice( __( 'Renseignez les champs obligatoires.', 'wcs-sell-coupons' ), 'error' );
-                $passed = false;
+                $passed = true;
             }
             return $passed;
 
