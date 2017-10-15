@@ -393,11 +393,17 @@ if ( in_array( 'woocommerce/woocommerce.php', apply_filters( 'active_plugins', g
             $email_heading  = __( 'Votre chèque cadeau à utiliser sur ', 'wcs-sell-coupons' ) . ' <a href="' . $blogurl .'">'. $blogname . '</a>';
             $toEmail        = $email;
             $formatted_price = wc_price($coupon_amount);
+            
+            //use post name (slug) as coupon code
+            //TODO: error strategy if coupon could not be retrieved correctly?
+            $post = get_post($post);            
+            $coupon_code = $post->post_name;
+            
             $theMessage     = '<h2>' . __('Bonjour ', 'wcs-sell-coupons' ) . ' ' . $name . ',</h2><p>'. $client_name . ' ' .
                    __(' vous offre un chèque cadeau de ', 'wcs-sell-coupons' ) . ' ' . $formatted_price . ' ' .
                    __(' à utiliser sur ', 'wcs-sell-coupons') . ' <a href="' . $blogurl .'">'. $blogname . '</a>.</p></br>
             <p>' . __("Pour l'utiliser entrez ce code: ", 'wcs-sell-coupons' ) . 
-                '<strong>' . get_the_title($post) . '</strong> ' . 
+                '<strong>' . $coupon_code . '</strong> ' . 
                 __('dans votre panier lors de votre achat.', 'wcs-sell-coupons') . '</p>';
             if ($coupon_expire){
                 $theMessage .= '<p>' . __("Attention, ce chèque cadeau est valable seulement jusqu'au ", 
