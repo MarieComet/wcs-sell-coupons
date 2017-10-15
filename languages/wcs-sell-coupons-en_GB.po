@@ -1,0 +1,131 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: WooCommerce Sell Coupons\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2017-10-15 11:11+0000\n"
+"PO-Revision-Date: 2017-10-15 11:13+0000\n"
+"Last-Translator: Jonathan Moore <jonathan.moore@bcs.org>\n"
+"Language-Team: English (UK)\n"
+"Language: en-GB\n"
+"Plural-Forms: nplurals=2; plural=n != 1\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Generator: Loco - https://localise.biz/"
+
+#: woo-sell-coupons.php:51
+msgid ""
+"Please visit WooCommerce > Settings > General to setup WooCommerce Sell "
+"Coupons !"
+msgstr ""
+
+#: woo-sell-coupons.php:117
+msgid "30"
+msgstr ""
+
+#: woo-sell-coupons.php:127
+msgid "GF"
+msgstr ""
+
+#: woo-sell-coupons.php:214
+msgid "E-mail"
+msgstr ""
+
+#: woo-sell-coupons.php:378
+msgid " vous offre un chèque cadeau !"
+msgstr "has sent you a gift voucher!"
+
+#: woo-sell-coupons.php:394
+msgid "Bonjour "
+msgstr "Hi"
+
+#: woo-sell-coupons.php:395
+msgid " vous offre un chèque cadeau de "
+msgstr "sends you a gift voucher of "
+
+#: woo-sell-coupons.php:396
+msgid " à utiliser sur "
+msgstr "to use on"
+
+#: woo-sell-coupons.php:397
+msgid "Pour l'utiliser entrez ce code: "
+msgstr "To use it please enter this code:"
+
+#: woo-sell-coupons.php:399
+msgid "dans votre panier lors de votre achat."
+msgstr "in your shopping basket when you check out."
+
+#: woo-sell-coupons.php:401
+msgid "Attention, ce chèque cadeau est valable seulement jusqu'au "
+msgstr "Warning, this coupon is only valid until"
+
+#: woo-sell-coupons.php:404
+msgid "A  bientôt sur "
+msgstr "See you soon on "
+
+#. Name of the plugin
+msgid "WooCommerce Sell Coupons"
+msgstr ""
+
+#. Description of the plugin
+msgid ""
+"This plugin create a new WooCommerce product type and add possibilty to sell "
+"Coupons as Gift Card in front-office. Please visit WooCommerce > Settings > "
+"General once activated !"
+msgstr ""
+
+#. URI of the plugin
+msgid "https://github.com/MarieComet/wcs-sell-coupons"
+msgstr ""
+
+#. Author of the plugin
+msgid "Marie Comet"
+msgstr ""
+
+#. Author URI of the plugin
+msgid "www.mariecomet.fr/"
+msgstr ""
+
+#: wcs-register-coupon.php:47
+msgid "Chèque Cadeau"
+msgstr "Gift Coupon"
+
+#: woo-sell-coupons.php:107
+msgid "Bons cadeaux"
+msgstr "Gift Coupons"
+
+#: woo-sell-coupons.php:110
+msgid "Durée des bons cadeaux"
+msgstr "Length of gift coupon"
+
+#: woo-sell-coupons.php:113
+msgid "La durée limite des bons cadeaux (en jours)"
+msgstr "Time limit in days for gift coupons"
+
+#: woo-sell-coupons.php:120
+msgid "Préfixe des codes bons cadeaux"
+msgstr "Prefix for gift coupon codes"
+
+#: woo-sell-coupons.php:123
+msgid "Le préfixe utilisé dans les codes promos"
+msgstr "Prefix used when generating coupon codes"
+
+#: woo-sell-coupons.php:142
+msgid "E-mail du destinataire"
+msgstr "Email address to send the gift to"
+
+#: woo-sell-coupons.php:144
+msgid "Nom et/ou prénom du destinataire"
+msgstr "Name of recipient"
+
+#: woo-sell-coupons.php:176
+msgid "Renseignez les champs obligatoires."
+msgstr "Please complete the mandatory fields."
+
+#: woo-sell-coupons.php:214
+msgid "Destinataire"
+msgstr "Receiver"
+
+#: woo-sell-coupons.php:391
+msgid "Votre chèque cadeau à utiliser sur "
+msgstr "Your gift coupon to use on"
