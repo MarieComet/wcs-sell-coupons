@@ -83,19 +83,21 @@ if ( in_array( 'woocommerce/woocommerce.php', apply_filters( 'active_plugins', g
                 foreach ( $terms as $term ) {
                     if($term->slug === 'gift_coupon') {
                         return true;
-                    } else {
-                        return false;
                     }
                 }
             }
+            return false;
         }
 
         /**
          * Register and enqueue style sheet.
          */
         public function wcs_register_plugin_styles() {
-            wp_register_style( 'woo-sell-coupons', plugins_url( 'woo-sell-coupons/woo-sell-coupons.css',  dirname(__FILE__)  ) );
-            wp_enqueue_style( 'woo-sell-coupons' );
+            /*
+            wp_register_style( 'wcs-sell-coupons', plugins_url( 'wcs-sell-coupons/wcs-sell-coupons.css',  dirname(__FILE__)  ) );
+            wp_enqueue_style( 'wcs-sell-coupons' );
+             * 
+             */
         }
 
         /**
@@ -192,8 +194,8 @@ if ( in_array( 'woocommerce/woocommerce.php', apply_filters( 'active_plugins', g
           if( $this->check_if_coupon_gift($product_id ) && !empty($_POST['wcs_email_friend']) && !empty($_POST['wcs_name_friend'])) {
               $cart_item_meta['wcs_email_friend'] = $_POST['wcs_email_friend'];
               $cart_item_meta['wcs_name_friend'] = $_POST['wcs_name_friend'];
-              return $cart_item_meta; 
-          }
+            }
+            return $cart_item_meta; 
         }
 
         /**
