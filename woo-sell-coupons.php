@@ -45,9 +45,10 @@ if ( in_array( 'woocommerce/woocommerce.php', apply_filters( 'active_plugins', g
 		}
 
         public function wcs_admin_notices() {
+            if (get_option('wcs_gift_coupon_prefix')!=''){return;}
             ?>
             <div class="notice notice-success is-dismissible">
-                <p><?php _e( 'Please visit WooCommerce > Settings > General to setup WooCommerce Sell Coupons !', 'wcs-sell-coupons' ); ?></p>
+              <p><a href="<?php echo(admin_url( 'admin.php?page=wc-settings')) ?>"><?php _e( 'Please visit WooCommerce > Settings > General to setup WooCommerce Sell Coupons !', 'wcs-sell-coupons' ); ?></a></p>
             </div>
             <?php
         }
@@ -331,7 +332,8 @@ if ( in_array( 'woocommerce/woocommerce.php', apply_filters( 'active_plugins', g
                     $coupon = array(
                         'post_title' => $prefix_gift_coupon.'_'.$coupon_code,
                         'post_content' => '',
-                        'post_excerpt' => 'Pour: ' . $friend_name . ' - Envoyé à: '. $friend_email,
+                        'post_excerpt' => __('Pour:', 'wcs-sell-coupons').' ' . $friend_name . ' ' . 
+                                          __('- Envoyé à:', 'wcs-sell-coupons') . ' '. $friend_email,
                         'post_status' => 'publish',
                         'post_author' => 1,
                         'post_type'     => 'shop_coupon'
