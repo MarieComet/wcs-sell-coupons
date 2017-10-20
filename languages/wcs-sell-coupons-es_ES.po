@@ -2,9 +2,9 @@ msgid ""
 msgstr ""
 "Project-Id-Version: WooCommerce Sell Coupons\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-10-15 11:13+0000\n"
-"PO-Revision-Date: 2017-10-15 11:16+0000\n"
-"Last-Translator: Jonathan Moore <jonathan.moore@bcs.org>\n"
+"POT-Creation-Date: 2017-10-20 06:26+0000\n"
+"PO-Revision-Date: 2017-10-20 06:28+0000\n"
+"Last-Translator: moqiao <moqiao@inkston.com>\n"
 "Language-Team: Spanish (Spain)\n"
 "Language: es-ES\n"
 "Plural-Forms: nplurals=2; plural=n != 1\n"
@@ -13,55 +13,75 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "X-Generator: Loco - https://localise.biz/"
 
-#: woo-sell-coupons.php:51
+#: woo-sell-coupons.php:54
 msgid ""
 "Please visit WooCommerce > Settings > General to setup WooCommerce Sell "
 "Coupons !"
 msgstr ""
 
-#: woo-sell-coupons.php:117
+#: woo-sell-coupons.php:122
 msgid "30"
 msgstr ""
 
-#: woo-sell-coupons.php:127
+#: woo-sell-coupons.php:132
 msgid "GF"
 msgstr ""
 
-#: woo-sell-coupons.php:214
+#: woo-sell-coupons.php:153
+msgid "Gift message"
+msgstr "Mensaje de regalo"
+
+#: woo-sell-coupons.php:230
+msgid "To"
+msgstr "Para"
+
+#: woo-sell-coupons.php:281
 msgid "E-mail"
+msgstr "Correo:"
+
+#: woo-sell-coupons.php:284
+msgid "Message"
+msgstr "Mensaje"
+
+#: woo-sell-coupons.php:287
+msgid "Coupon"
+msgstr "Cupón"
+
+#: woo-sell-coupons.php:373
+msgid "Pour:"
+msgstr "Para:"
+
+#: woo-sell-coupons.php:374
+msgid "- Envoyé à:"
+msgstr " - Enviado a:"
+
+#: woo-sell-coupons.php:498
+msgid ""
+"Please note: this coupon is already used and cannot be used again, this "
+"email is for information only."
 msgstr ""
+"Tenga en cuenta que este cupón ya se utiliza y no se puede volver a utilizar,"
+" este correo electrónico es solo para información."
 
-#: woo-sell-coupons.php:378
-msgid " vous offre un chèque cadeau !"
-msgstr "le he enviado un cupón de regalo!"
+#: woo-sell-coupons.php:511
+msgid "Copy of Message"
+msgstr "Copia de mensaje"
 
-#: woo-sell-coupons.php:394
-msgid "Bonjour "
-msgstr "Buenos días"
+#: woo-sell-coupons.php:512
+msgid "To:"
+msgstr "Para:"
 
-#: woo-sell-coupons.php:395
-msgid " vous offre un chèque cadeau de "
-msgstr "le ofrece un cupón de regalo de"
+#: woo-sell-coupons.php:513
+msgid "Subject:"
+msgstr "Asunto:"
 
-#: woo-sell-coupons.php:396
-msgid " à utiliser sur "
-msgstr "que se puede utilizar en"
+#: woo-sell-coupons.php:518
+msgid "Your gift coupon was sent to:"
+msgstr "Su cupón de regalo fue enviado a:"
 
-#: woo-sell-coupons.php:397
-msgid "Pour l'utiliser entrez ce code: "
-msgstr "Para utilizarlo, dar de alta el código: "
-
-#: woo-sell-coupons.php:399
-msgid "dans votre panier lors de votre achat."
-msgstr "en la cesta de compra cuando pase por caja."
-
-#: woo-sell-coupons.php:401
-msgid "Attention, ce chèque cadeau est valable seulement jusqu'au "
-msgstr "Cuidado, este cupón de regalo tiene fecha de vencimiento de"
-
-#: woo-sell-coupons.php:404
-msgid "A  bientôt sur "
-msgstr "Hasta pronto en"
+#: woo-sell-coupons.php:525
+msgid "Gift coupon was issued for order:"
+msgstr "El cupón de regalo se emitió por pedido:"
 
 #. Name of the plugin
 msgid "WooCommerce Sell Coupons"
@@ -83,49 +103,81 @@ msgid "Marie Comet"
 msgstr ""
 
 #. Author URI of the plugin
-msgid "www.mariecomet.fr/"
+msgid "https://www.mariecomet.fr/"
 msgstr ""
 
 #: wcs-register-coupon.php:47
 msgid "Chèque Cadeau"
 msgstr "Cupón de regalo"
 
-#: woo-sell-coupons.php:107
+#: woo-sell-coupons.php:112
 msgid "Bons cadeaux"
 msgstr "Cupones de regalo"
 
-#: woo-sell-coupons.php:110
+#: woo-sell-coupons.php:115
 msgid "Durée des bons cadeaux"
 msgstr "Duración de los cupones de regalo"
 
-#: woo-sell-coupons.php:113
+#: woo-sell-coupons.php:118
 msgid "La durée limite des bons cadeaux (en jours)"
 msgstr "Vencimiento de los cupones de regalo (días)"
 
-#: woo-sell-coupons.php:120
+#: woo-sell-coupons.php:125
 msgid "Préfixe des codes bons cadeaux"
 msgstr "Prefijo de los códigos de cupones"
 
-#: woo-sell-coupons.php:123
+#: woo-sell-coupons.php:128
 msgid "Le préfixe utilisé dans les codes promos"
 msgstr "El prefijo utilizado a la hora de generar los códigos de cupón"
 
-#: woo-sell-coupons.php:142
+#: woo-sell-coupons.php:147
 msgid "E-mail du destinataire"
 msgstr "Correo electrónico de destino"
 
-#: woo-sell-coupons.php:144
+#: woo-sell-coupons.php:149
 msgid "Nom et/ou prénom du destinataire"
 msgstr "Nombre del destinatorio"
 
-#: woo-sell-coupons.php:176
+#: woo-sell-coupons.php:187
 msgid "Renseignez les champs obligatoires."
 msgstr "Rellenar los campos obligatorios"
 
-#: woo-sell-coupons.php:214
+#: woo-sell-coupons.php:278
 msgid "Destinataire"
 msgstr "Destinatorio"
 
-#: woo-sell-coupons.php:391
+#: woo-sell-coupons.php:463
+msgid " vous offre un chèque cadeau !"
+msgstr "le he enviado un cupón de regalo!"
+
+#: woo-sell-coupons.php:477
 msgid "Votre chèque cadeau à utiliser sur "
 msgstr "Su cupón de regalo para usar en"
+
+#: woo-sell-coupons.php:487
+msgid "Bonjour "
+msgstr "Buenos días"
+
+#: woo-sell-coupons.php:488
+msgid " vous offre un chèque cadeau de "
+msgstr "le ofrece un cupón de regalo de"
+
+#: woo-sell-coupons.php:489
+msgid " à utiliser sur "
+msgstr "que se puede utilizar en"
+
+#: woo-sell-coupons.php:490
+msgid "Pour l'utiliser entrez ce code: "
+msgstr "Para utilizarlo, dar de alta el código: "
+
+#: woo-sell-coupons.php:492
+msgid "dans votre panier lors de votre achat."
+msgstr "en la cesta de compra cuando pase por caja."
+
+#: woo-sell-coupons.php:494
+msgid "Attention, ce chèque cadeau est valable seulement jusqu'au "
+msgstr "Cuidado, este cupón de regalo tiene fecha de vencimiento de"
+
+#: woo-sell-coupons.php:501
+msgid "A  bientôt sur "
+msgstr "Hasta pronto en"

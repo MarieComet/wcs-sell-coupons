@@ -64,7 +64,7 @@ if ( in_array( 'woocommerce/woocommerce.php', apply_filters( 'active_plugins', g
     }
     add_filter( 'woocommerce_product_data_tabs', 'wcs_hide_attributes_data_panel', 10,1 );
 
-    if (! function_exists( 'woocommerce_gift_coupon_add_to_cart' ) ) {
+    if (! function_exists( 'gift_coupon_add_to_cart' ) ) {
 
       /**
       * Output the simple product add to cart area.
