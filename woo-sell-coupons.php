@@ -155,7 +155,12 @@ if ( in_array( 'woocommerce/woocommerce.php', apply_filters( 'active_plugins', g
                 echo '</div>';
 
                 echo '<label for="wcs_gift_message">' . __('Gift message', 'wcs-sell-coupons') . ': </label>';
-                wp_editor( '', 'wcs_gift_message', array(
+                $gift_message = __('Sending you this gift coupon with best wishes', 'wcs-sell-coupons');
+                $thumbnail = wp_get_attachment_image( get_post_thumbnail_id(), 'thumbnail');
+                if  ( $thumbnail ) { $gift_message .= '<br />' . $thumbnail; }
+                $gift_message = apply_filters('wcs_gift_message', $gift_message);
+                wp_editor($gift_message , 'wcs_gift_message', array(
+                    'default_editor'    => 'TinyMCE',
                     /*
                     'wpautop'           => $r['wpautop'],
                     'media_buttons'     => $r['media_buttons'],
@@ -184,11 +189,10 @@ if ( in_array( 'woocommerce/woocommerce.php', apply_filters( 'active_plugins', g
         function wcs_custom_data_callback() {
             // We'll use this to post back the data the server received
             print_r($_POST);
-            // Lets store the data in the current session
-            session_start();
-            $_SESSION['wcs_email_friend']  = $_POST['wcs_email_friend']; 
-            $_SESSION['wcs_name_friend']  = $_POST['wcs_name_friend'];
-            $_SESSION['wcs_gift_message']  = $_POST['wcs_gift_message'];
+
+            WC()->session->set('wcs_email_friend', $_POST['wcs_email_friend']);
+            WC()->session->set('wcs_name_friend', $_POST['wcs_email_friend']);
+            WC()->session->set('wcs_gift_message', $_POST['wcs_email_friend']);
             // RIP
             die();
         }
@@ -221,7 +225,7 @@ if ( in_array( 'woocommerce/woocommerce.php', apply_filters( 'active_plugins', g
             if( $this->check_if_coupon_gift($product_id ) && !empty($_POST['wcs_email_friend']) && !empty($_POST['wcs_name_friend'])) {
                 $cart_item_meta['wcs_email_friend'] = sanitize_email($_POST['wcs_email_friend']);
                 $cart_item_meta['wcs_name_friend'] = sanitize_text_field($_POST['wcs_name_friend']);
-                $cart_item_meta['wcs_gift_message'] = wp_filter_post_kses($_POST['wcs_gift_message']);
+                $cart_item_meta['wcs_gift_message'] = wp_kses_post($_POST['wcs_gift_message']);
             }
             return $cart_item_meta; 
         }
@@ -475,7 +479,6 @@ if ( in_array( 'woocommerce/woocommerce.php', apply_filters( 'active_plugins', g
             // Construct email datas
 //get_current_site()->site_name; //wp_specialchars_decode(get_option('blogname'), ENT_QUOTES);
             $blogname       = get_bloginfo( 'name', 'display' ); 
-            $blogurl        = wc_get_page_permalink ('shop');
             $blogurl        = get_home_url();
             $shopurl        = wc_get_page_permalink ('shop');
             $subject        = '[' . $blogname . '] ' . $client_name . ' ' . __(' vous offre un chèque cadeau !', 'wcs-sell-coupons' ) ;

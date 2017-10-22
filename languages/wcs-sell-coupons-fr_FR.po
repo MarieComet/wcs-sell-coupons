@@ -2,8 +2,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: WooCommerce Sell Coupons\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-10-22 01:21+0000\n"
-"PO-Revision-Date: 2017-10-22 01:21+0000\n"
+"POT-Creation-Date: 2017-10-22 14:19+0000\n"
+"PO-Revision-Date: 2017-10-22 14:19+0000\n"
 "Last-Translator: moqiao <moqiao@inkston.com>\n"
 "Language-Team: French (France)\n"
 "Language: fr-FR\n"
@@ -57,76 +57,71 @@ msgstr ""
 msgid "Gift message"
 msgstr ""
 
-#: woo-sell-coupons.php:191
+#: woo-sell-coupons.php:158
+msgid "Sending you this gift coupon with best wishes"
+msgstr "Je t'envoie ce coupon cadeau avec mes meilleurs vœux"
+
+#: woo-sell-coupons.php:210
 msgid "Renseignez les champs obligatoires."
 msgstr ""
 
-#: woo-sell-coupons.php:282
+#: woo-sell-coupons.php:301
 msgid "Destinataire"
 msgstr ""
 
-#: woo-sell-coupons.php:285
+#: woo-sell-coupons.php:304
 msgid "E-mail"
 msgstr ""
 
-#: woo-sell-coupons.php:288
+#: woo-sell-coupons.php:307
 msgid "Message"
 msgstr ""
 
-#: woo-sell-coupons.php:291
+#: woo-sell-coupons.php:310
 msgid "Coupon"
 msgstr ""
 
-#: woo-sell-coupons.php:374
+#: woo-sell-coupons.php:393
 msgid "Pour:"
 msgstr ""
 
-#: woo-sell-coupons.php:375
+#: woo-sell-coupons.php:394
 msgid "- Envoyé à:"
 msgstr ""
 
-#: woo-sell-coupons.php:463
+#: woo-sell-coupons.php:484
 msgid " vous offre un chèque cadeau !"
 msgstr ""
 
-#: woo-sell-coupons.php:477
+#: woo-sell-coupons.php:498
 msgid "Votre chèque cadeau à utiliser sur "
 msgstr ""
 
-#: woo-sell-coupons.php:481
+#: woo-sell-coupons.php:502
 msgid "Bonjour "
 msgstr ""
 
-#: woo-sell-coupons.php:482
+#: woo-sell-coupons.php:503
 msgid " vous offre un chèque cadeau de "
 msgstr ""
 
-#: woo-sell-coupons.php:483
+#: woo-sell-coupons.php:504
 msgid " à utiliser sur "
 msgstr ""
 
-#: woo-sell-coupons.php:488
+#: woo-sell-coupons.php:509
 msgid "Pour l'utiliser entrez ce code: "
 msgstr ""
 
-#: woo-sell-coupons.php:490
+#: woo-sell-coupons.php:511
 msgid "dans votre panier lors de votre achat."
 msgstr ""
 
-#: woo-sell-coupons.php:495
-#, php-format
-msgid ""
-"Please note: this coupon expired on %s and cannot be used, this email is for "
-"information only."
-msgstr ""
-"S'il vous plaît noter: ce coupon expiré sur %s et ne peut pas être utilisé, "
-"cet e-mail est à titre informatif seulement."
-
-#: woo-sell-coupons.php:497
+#: woo-sell-coupons.php:519
 msgid "Attention, ce chèque cadeau est valable seulement jusqu'au "
 msgstr ""
 
-#: woo-sell-coupons.php:504
+#: woo-sell-coupons.php:526
 msgid "A  bientôt sur "
 msgstr ""
 
@@ -154,11 +149,20 @@ msgstr ""
 "Visitez WooCommerce > Paramètres > Général pour configurer les coupons de "
 "vente WooCommerce!"
 
-#: woo-sell-coupons.php:234
+#: woo-sell-coupons.php:253
 msgid "To"
 msgstr "Pour"
 
-#: woo-sell-coupons.php:502
+#: woo-sell-coupons.php:517
+#, php-format
+msgid ""
+"Please note: this coupon expired on %s and cannot be used, this email is for "
+"information only."
+msgstr ""
+"S'il vous plaît noter: ce coupon expiré sur %s et ne peut pas être utilisé, "
+"cet e-mail est à titre informatif seulement."
+
+#: woo-sell-coupons.php:524
 msgid ""
 "Please note: this coupon is already used and cannot be used again, this "
 "email is for information only."
@@ -166,23 +170,23 @@ msgstr ""
 "S'il vous plaît noter: ce coupon est déjà utilisé et ne peut pas être "
 "utilisé à nouveau, cet e-mail est pour information seulement."
 
-#: woo-sell-coupons.php:514
+#: woo-sell-coupons.php:536
 msgid "Copy of Message"
 msgstr "Copie du message"
 
-#: woo-sell-coupons.php:515
+#: woo-sell-coupons.php:537
 msgid "To:"
 msgstr "Pour:"
 
-#: woo-sell-coupons.php:516
+#: woo-sell-coupons.php:538
 msgid "Subject:"
 msgstr "Sujet:"
 
-#: woo-sell-coupons.php:521
+#: woo-sell-coupons.php:543
 msgid "Your gift coupon was sent to:"
 msgstr "Votre coupon cadeau a été envoyé à:"
 
-#: woo-sell-coupons.php:528
+#: woo-sell-coupons.php:550
 msgid "Gift coupon was issued for order:"
 msgstr "Bon cadeau a été émis pour l'ordre:"
 
