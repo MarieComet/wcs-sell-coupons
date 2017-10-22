@@ -382,11 +382,16 @@ if ( in_array( 'woocommerce/woocommerce.php', apply_filters( 'active_plugins', g
                     }
                         
                     $discount_type = 'fixed_cart'; // Type: fixed_cart, percent, fixed_product, percent_product
+                    /**
+                     * Filters the coupon rules meta data to create.
+                     *
+                     * @param array $coupon_meta keyed array of coupon attributes.
+                     */
                     $coupon_meta = apply_filters('wcs_gift_coupon_meta', array(
                         'discount_type' => $discount_type ,
                         'coupon_amount' => $amount ,
                         'expiry_date' => $expiry_date,
-                        'date_expire' => $date_expire,
+                        'date_expires' => $date_expire,
                         'individual_use' => 'yes' ,
                         'usage_limit' => '1' ,
                         'usage_limit_per_user' => '1' ,
@@ -428,12 +433,36 @@ if ( in_array( 'woocommerce/woocommerce.php', apply_filters( 'active_plugins', g
             
             // Get the coupon code amount
             $coupon_amount = get_post_meta($post, 'coupon_amount', true);
-            $coupon_expire = get_post_meta($post, 'expiry_date', true);
+            $coupon_expire = get_post_meta($post, 'date_expires', true);
+            $coupon_has_expired = false;
+            if ($coupon_expire && strtotime($coupon_expire) && 
+                (current_time('timestamp', true) > strtotime($coupon_expire)) ){
+                $coupon_has_expired = true;
+            }
             $usage_count = get_post_meta($post, 'usage_count', true);
+            //coupons are in shop base currency not current user/order currency so get unfiltered base ccy
+            $formatted_price = wc_price($coupon_amount, array('currency' => get_option( 'woocommerce_currency' ), ));
+                
+            /**
+             * allow theme to apply special formatting including link to auto-add-coupon to basket
+             * ( ?apply_coupon=coupon_code requires plugin, not implemented in woocommerce core)
+             * could also add fancy formatting / additional message and QR codes
+             *
+             * @param string $formatted_coupon_code default formatting
+             * @param string $coupon_code           raw coupon code
+             * @param string $coupon_amount         raw coupon amount
+             * @param string $formatted_price       formatted coupon amount
+             */
+            $formatted_coupon_code = apply_filters('wcs_format_gift_coupon', 
+                '<h2>' . $coupon_code . '</h2>', 
+                $coupon_code, $coupon_amount, $formatted_price);
 
             // Construct email datas
-            $blogname       = wp_specialchars_decode(get_option('blogname'), ENT_QUOTES);
-            $blogurl        = wp_specialchars_decode(get_option('home'), ENT_QUOTES);
+//get_current_site()->site_name; //wp_specialchars_decode(get_option('blogname'), ENT_QUOTES);
+            $blogname       = get_bloginfo( 'name', 'display' ); 
+            $blogurl        = wc_get_page_permalink ('shop');
+            $blogurl        = get_home_url();
+            $shopurl        = wc_get_page_permalink ('shop');
             $subject        = '[' . $blogname . '] ' . $client_name . ' ' . __(' vous offre un chèque cadeau !', 'wcs-sell-coupons' ) ;
             $sendEmail      = get_bloginfo( 'admin_email' );
             $headers        = array('Content-Type: text/html; charset=UTF-8');
@@ -450,19 +479,28 @@ if ( in_array( 'woocommerce/woocommerce.php', apply_filters( 'active_plugins', g
 
             $email_heading  = __( 'Votre chèque cadeau à utiliser sur ', 'wcs-sell-coupons' ) . ' <a href="' . $blogurl .'">'. $blogname . '</a>';
             $toEmail        = $email;
-            //coupons are in shop base currency not current user/order currency so get unfiltered base ccy
-            $formatted_price = wc_price($coupon_amount, array('currency' => get_option( 'woocommerce_currency' ), ));
             
             
             $theMessage     = $friend_message . ' <h2>' . __('Bonjour ', 'wcs-sell-coupons' ) . ' ' . $name . ',</h2><p>'. $client_name . ' ' .
                    __(' vous offre un chèque cadeau de ', 'wcs-sell-coupons' ) . ' ' . $formatted_price . ' ' .
-                   __(' à utiliser sur ', 'wcs-sell-coupons') . ' <a href="' . $blogurl .'">'. $blogname . '</a>.</p></br>
-            <p>' . __("Pour l'utiliser entrez ce code: ", 'wcs-sell-coupons' ) . 
-                '<strong>' . $coupon_code . '</strong> ' . 
+                   __(' à utiliser sur ', 'wcs-sell-coupons') . ' <a href="' . $shopurl .'">'. $blogname . '</a>.</p><br />';
+
+            if ($usage_count || $coupon_has_expired){
+                $theMessage .= '<h2>' . $coupon_code . '</h2> ';
+            } else {
+                $theMessage .= '<p>' . __("Pour l'utiliser entrez ce code: ", 'wcs-sell-coupons' ) . 
+                    ' <strong>' . $coupon_code . '</strong> ' . 
                 __('dans votre panier lors de votre achat.', 'wcs-sell-coupons') . '</p>';
+                $theMessage .= $formatted_coupon_code;
+            }
             if ($coupon_expire){
+                $formatted_coupon_expire = date("Y-m-d", $coupon_expire);
+                if ($coupon_has_expired){
+                    $theMessage .= '<p>' . sprintf(__('Please note: this coupon expired on %s and cannot be used, this email is for information only.', 'wcs-sell-coupons'), $formatted_coupon_expire) . '</p>';                                    
+                } else {
                 $theMessage .= '<p>' . __("Attention, ce chèque cadeau est valable seulement jusqu'au ", 
-                    'wcs-sell-coupons') .$coupon_expire.' !</p>';
+                        'wcs-sell-coupons') . ' ' . $formatted_coupon_expire .' !</p>';
+                }
             }
             if ($usage_count){
                 $theMessage .= '<p>' . __('Please note: this coupon is already used and cannot be used again, this email is for information only.', 'wcs-sell-coupons') . '</p>';                

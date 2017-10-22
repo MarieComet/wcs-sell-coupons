@@ -3,7 +3,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-10-20 06:24+0000\n"
+"POT-Creation-Date: 2017-10-22 01:19+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: \n"
@@ -24,75 +24,75 @@ msgid ""
 "Coupons !"
 msgstr ""
 
-#: woo-sell-coupons.php:112
+#: woo-sell-coupons.php:116
 msgid "Bons cadeaux"
 msgstr ""
 
-#: woo-sell-coupons.php:115
+#: woo-sell-coupons.php:119
 msgid "Durée des bons cadeaux"
 msgstr ""
 
-#: woo-sell-coupons.php:118
+#: woo-sell-coupons.php:122
 msgid "La durée limite des bons cadeaux (en jours)"
 msgstr ""
 
-#: woo-sell-coupons.php:122
+#: woo-sell-coupons.php:126
 msgid "30"
 msgstr ""
 
-#: woo-sell-coupons.php:125
+#: woo-sell-coupons.php:129
 msgid "Préfixe des codes bons cadeaux"
 msgstr ""
 
-#: woo-sell-coupons.php:128
+#: woo-sell-coupons.php:132
 msgid "Le préfixe utilisé dans les codes promos"
 msgstr ""
 
-#: woo-sell-coupons.php:132
+#: woo-sell-coupons.php:136
 msgid "GF"
 msgstr ""
 
-#: woo-sell-coupons.php:147
+#: woo-sell-coupons.php:151
 msgid "E-mail du destinataire"
 msgstr ""
 
-#: woo-sell-coupons.php:149
+#: woo-sell-coupons.php:153
 msgid "Nom et/ou prénom du destinataire"
 msgstr ""
 
-#: woo-sell-coupons.php:153
+#: woo-sell-coupons.php:157
 msgid "Gift message"
 msgstr ""
 
-#: woo-sell-coupons.php:187
+#: woo-sell-coupons.php:191
 msgid "Renseignez les champs obligatoires."
 msgstr ""
 
-#: woo-sell-coupons.php:230
+#: woo-sell-coupons.php:234
 msgid "To"
 msgstr ""
 
-#: woo-sell-coupons.php:278
+#: woo-sell-coupons.php:282
 msgid "Destinataire"
 msgstr ""
 
-#: woo-sell-coupons.php:281
+#: woo-sell-coupons.php:285
 msgid "E-mail"
 msgstr ""
 
-#: woo-sell-coupons.php:284
+#: woo-sell-coupons.php:288
 msgid "Message"
 msgstr ""
 
-#: woo-sell-coupons.php:287
+#: woo-sell-coupons.php:291
 msgid "Coupon"
 msgstr ""
 
-#: woo-sell-coupons.php:373
+#: woo-sell-coupons.php:374
 msgid "Pour:"
 msgstr ""
 
-#: woo-sell-coupons.php:374
+#: woo-sell-coupons.php:375
 msgid "- Envoyé à:"
 msgstr ""
 
@@ -104,57 +104,64 @@ msgstr ""
 msgid "Votre chèque cadeau à utiliser sur "
 msgstr ""
 
-#: woo-sell-coupons.php:487
+#: woo-sell-coupons.php:481
 msgid "Bonjour "
 msgstr ""
 
-#: woo-sell-coupons.php:488
+#: woo-sell-coupons.php:482
 msgid " vous offre un chèque cadeau de "
 msgstr ""
 
-#: woo-sell-coupons.php:489
+#: woo-sell-coupons.php:483
 msgid " à utiliser sur "
 msgstr ""
 
-#: woo-sell-coupons.php:490
+#: woo-sell-coupons.php:488
 msgid "Pour l'utiliser entrez ce code: "
 msgstr ""
 
-#: woo-sell-coupons.php:492
+#: woo-sell-coupons.php:490
 msgid "dans votre panier lors de votre achat."
 msgstr ""
 
-#: woo-sell-coupons.php:494
+#: woo-sell-coupons.php:495
+#, php-format
+msgid ""
+"Please note: this coupon expired on %s and cannot be used, this email is for "
+"information only."
+msgstr ""
+
+#: woo-sell-coupons.php:497
 msgid "Attention, ce chèque cadeau est valable seulement jusqu'au "
 msgstr ""
 
-#: woo-sell-coupons.php:498
+#: woo-sell-coupons.php:502
 msgid ""
 "Please note: this coupon is already used and cannot be used again, this "
 "email is for information only."
 msgstr ""
 
-#: woo-sell-coupons.php:501
+#: woo-sell-coupons.php:504
 msgid "A  bientôt sur "
 msgstr ""
 
-#: woo-sell-coupons.php:511
+#: woo-sell-coupons.php:514
 msgid "Copy of Message"
 msgstr ""
 
-#: woo-sell-coupons.php:512
+#: woo-sell-coupons.php:515
 msgid "To:"
 msgstr ""
 
-#: woo-sell-coupons.php:513
+#: woo-sell-coupons.php:516
 msgid "Subject:"
 msgstr ""
 
-#: woo-sell-coupons.php:518
+#: woo-sell-coupons.php:521
 msgid "Your gift coupon was sent to:"
 msgstr ""
 
-#: woo-sell-coupons.php:525
+#: woo-sell-coupons.php:528
 msgid "Gift coupon was issued for order:"
 msgstr ""
 
