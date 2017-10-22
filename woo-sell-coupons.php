@@ -155,7 +155,22 @@ if ( in_array( 'woocommerce/woocommerce.php', apply_filters( 'active_plugins', g
                 echo '</div>';
 
                 echo '<label for="wcs_gift_message">' . __('Gift message', 'wcs-sell-coupons') . ': </label>';
-                echo '<textarea id="wcs_gift_message" name="wcs_gift_message" placeholder="Add your gift message here."></textarea>';
+                wp_editor( '', 'wcs_gift_message', array(
+                    /*
+                    'wpautop'           => $r['wpautop'],
+                    'media_buttons'     => $r['media_buttons'],
+                    'textarea_rows'     => $r['textarea_rows'],
+                    'tabindex'          => $r['tabindex'],
+                    'tabfocus_elements' => $r['tabfocus_elements'],
+                    'editor_class'      => $r['editor_class'],
+                    'tinymce'           => $r['tinymce'],
+                    'teeny'             => $r['teeny'],
+                    'quicktags'         => $r['quicktags'],
+                    'dfw'               => $r['dfw'],
+                     * 
+                     */
+                ) );
+                //echo '<textarea id="wcs_gift_message" name="wcs_gift_message" placeholder="Add your gift message here."></textarea>';
                 echo '</div>';
             }
         }
@@ -204,9 +219,9 @@ if ( in_array( 'woocommerce/woocommerce.php', apply_filters( 'active_plugins', g
         function wcs_add_cart_item_custom_data( $cart_item_meta, $product_id ) {
             global $woocommerce;
             if( $this->check_if_coupon_gift($product_id ) && !empty($_POST['wcs_email_friend']) && !empty($_POST['wcs_name_friend'])) {
-                $cart_item_meta['wcs_email_friend'] = $_POST['wcs_email_friend'];
-                $cart_item_meta['wcs_name_friend'] = $_POST['wcs_name_friend'];
-                $cart_item_meta['wcs_gift_message'] = $_POST['wcs_gift_message'];
+                $cart_item_meta['wcs_email_friend'] = sanitize_email($_POST['wcs_email_friend']);
+                $cart_item_meta['wcs_name_friend'] = sanitize_text_field($_POST['wcs_name_friend']);
+                $cart_item_meta['wcs_gift_message'] = wp_filter_post_kses($_POST['wcs_gift_message']);
             }
             return $cart_item_meta; 
         }
