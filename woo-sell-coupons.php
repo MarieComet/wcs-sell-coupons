@@ -252,7 +252,7 @@ if ( in_array( 'woocommerce/woocommerce.php', apply_filters( 'active_plugins', g
             if( $this->check_if_coupon_gift($values['product_id'] ) && isset($values['wcs_name_friend']) && isset($values['wcs_email_friend'])) {
                 $return_string = $product_name . "</br><span>" . __('To', 'wcs-sell-coupons') . ": " . $values['wcs_name_friend'] . " (" . $values['wcs_email_friend'] . ')</span>';
                 if ( isset($values['wcs_gift_message']) && $values['wcs_gift_message'] ){
-                    $return_string .= "<br /><span>" . $values['wcs_gift_message'] . '</span>';
+                    $return_string .= "<br /><span>" . stripslashes($values['wcs_gift_message']) . '</span>';
                 }
                 return $return_string;
             } else {
@@ -268,7 +268,7 @@ if ( in_array( 'woocommerce/woocommerce.php', apply_filters( 'active_plugins', g
             if( $this->check_if_coupon_gift($item['product_id'] ) && isset($item['name_to']) && isset($item['mail_to'])) {
                 $return_string = $name . "<br />" . $item['name_to'] . "<br />" . $item['mail_to'];
                 if ( isset($item['gift_message']) && $item['gift_message'] ){
-                    $return_string .= "<br /><span>" . $item['gift_message'] . '</span>';
+                    $return_string .= "<br /><span>" . stripslashes($item['gift_message']) . '</span>';
                 }
                 return $return_string;
             } else {
@@ -377,7 +377,7 @@ if ( in_array( 'woocommerce/woocommerce.php', apply_filters( 'active_plugins', g
                     $friend_email = $values['item_meta']['_mail_to'];
                     $friend_name = $values['item_meta']['_name_to'];
                     $friend_message = isset($values['item_meta']['_gift_message']) ? 
-                        $values['item_meta']['_gift_message'] : '';
+                        stripslashes( $values['item_meta']['_gift_message'] ) : '';
 
                     //if coupon already issued, get it, don't issue again by changing the status repeatedly
                     $coupon_code = wc_get_order_item_meta($order_product_detail, '_gift_code');                    
