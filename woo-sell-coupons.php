@@ -3,11 +3,13 @@
  * Plugin Name: WooCommerce Sell Coupons
  * Text Domain: wcs-sell-coupons
  * Domain Path: /languages
+ * WC requires at least: 3.0.0
+ * WC tested up to: 3.1.2
  * Plugin URI: https://github.com/MarieComet/wcs-sell-coupons
  * Description: This plugin create a new WooCommerce product type and add possibilty to sell Coupons as Gift Card in front-office. Please visit WooCommerce > Settings > General once activated !
- * Version: 1.0.1
+ * Version: 1.0.2
  * Author: Marie Comet
- * Author URI: www.mariecomet.fr/
+ * Author URI: https://www.mariecomet.fr/
  * License: GPLv2 or later
  * @package WooCommerce Sell Coupons
  * @version 1.6
@@ -37,6 +39,7 @@ if ( in_array( 'woocommerce/woocommerce.php', apply_filters( 'active_plugins', g
             }
         }
 
+        private $pluginlocale;
     /**
 		 * load translations
 		 */
@@ -71,6 +74,10 @@ if ( in_array( 'woocommerce/woocommerce.php', apply_filters( 'active_plugins', g
             add_filter('woocommerce_order_item_display_meta_key', array($this, 'wcs_add_order_formatted_key'), 10, 2);
             add_action('woocommerce_before_cart_item_quantity_zero',array($this, 'wcs_remove_user_custom_data_options_from_cart') ,1,1);
             add_action('woocommerce_order_status_completed', array($this, 'wcs_create_coupon_on_order_complete') );
+
+            //locale management for translations
+            add_action ('switch_locale', array($this, 'wcs_switch_locale'), 10, 1 );
+            add_filter('plugin_locale', array($this, 'wcs_correct_locale'), 100, 2);            
         }
 
         /**
@@ -146,6 +153,30 @@ if ( in_array( 'woocommerce/woocommerce.php', apply_filters( 'active_plugins', g
                 echo '<label for="wcs_name_friend">' . __('Nom et/ou prénom du destinataire', 'wcs-sell-coupons') . ': <abbr class="required" title="requis">*</abbr></label>';
                 echo '<input type="text" id="wcs_name_friend" name="wcs_name_friend" placeholder="Jean Dupont"/>';
                 echo '</div>';
+
+                echo '<label for="wcs_gift_message">' . __('Gift message', 'wcs-sell-coupons') . ': </label>';
+                $gift_message = __('Sending you this gift coupon with best wishes', 'wcs-sell-coupons');
+                $thumbnail = wp_get_attachment_image( get_post_thumbnail_id(), 'thumbnail');
+                if  ( $thumbnail ) { $gift_message .= '<br />' . $thumbnail; }
+                $gift_message = apply_filters('wcs_gift_message', $gift_message);
+                wp_editor($gift_message , 'wcs_gift_message', array(
+                    'default_editor'    => 'TinyMCE',
+                    /*
+                    'wpautop'           => $r['wpautop'],
+                    'media_buttons'     => $r['media_buttons'],
+                    'textarea_rows'     => $r['textarea_rows'],
+                    'tabindex'          => $r['tabindex'],
+                    'tabfocus_elements' => $r['tabfocus_elements'],
+                    'editor_class'      => $r['editor_class'],
+                    'tinymce'           => $r['tinymce'],
+                    'teeny'             => $r['teeny'],
+                    'quicktags'         => $r['quicktags'],
+                    'dfw'               => $r['dfw'],
+                     * 
+                     */
+                ) );
+                //echo '<textarea id="wcs_gift_message" name="wcs_gift_message" placeholder="Add your gift message here."></textarea>';
+                echo '</div>';
             }
         }
 
@@ -158,10 +189,10 @@ if ( in_array( 'woocommerce/woocommerce.php', apply_filters( 'active_plugins', g
         function wcs_custom_data_callback() {
             // We'll use this to post back the data the server received
             print_r($_POST);
-            // Lets store the data in the current session
-            session_start();
-            $_SESSION['wcs_email_friend']  = $_POST['wcs_email_friend']; 
-            $_SESSION['wcs_name_friend']  = $_POST['wcs_name_friend'];
+
+            WC()->session->set('wcs_email_friend', $_POST['wcs_email_friend']);
+            WC()->session->set('wcs_name_friend', $_POST['wcs_email_friend']);
+            WC()->session->set('wcs_gift_message', $_POST['wcs_email_friend']);
             // RIP
             die();
         }
@@ -190,10 +221,11 @@ if ( in_array( 'woocommerce/woocommerce.php', apply_filters( 'active_plugins', g
         *   Hooked on woocommerce_add_cart_item_data
         */
         function wcs_add_cart_item_custom_data( $cart_item_meta, $product_id ) {
-          global $woocommerce;
-          if( $this->check_if_coupon_gift($product_id ) && !empty($_POST['wcs_email_friend']) && !empty($_POST['wcs_name_friend'])) {
-              $cart_item_meta['wcs_email_friend'] = $_POST['wcs_email_friend'];
-              $cart_item_meta['wcs_name_friend'] = $_POST['wcs_name_friend'];
+            global $woocommerce;
+            if( $this->check_if_coupon_gift($product_id ) && !empty($_POST['wcs_email_friend']) && !empty($_POST['wcs_name_friend'])) {
+                $cart_item_meta['wcs_email_friend'] = sanitize_email($_POST['wcs_email_friend']);
+                $cart_item_meta['wcs_name_friend'] = sanitize_text_field($_POST['wcs_name_friend']);
+                $cart_item_meta['wcs_gift_message'] = wp_kses_post($_POST['wcs_gift_message']);
             }
             return $cart_item_meta; 
         }
@@ -207,6 +239,8 @@ if ( in_array( 'woocommerce/woocommerce.php', apply_filters( 'active_plugins', g
                 $item[ 'wcs_email_friend' ] = $values['wcs_email_friend'];
             if ( array_key_exists( 'wcs_name_friend', $values ) )
                 $item[ 'wcs_name_friend' ] = $values['wcs_name_friend'];
+            if ( array_key_exists( 'wcs_gift_message', $values ) )
+                $item[ 'wcs_gift_message' ] = $values['wcs_gift_message'];
             return $item;
         }
 
@@ -216,7 +250,10 @@ if ( in_array( 'woocommerce/woocommerce.php', apply_filters( 'active_plugins', g
         */
         function wcs_add_user_custom_session($product_name, $values, $cart_item_key ) {
             if( $this->check_if_coupon_gift($values['product_id'] ) && isset($values['wcs_name_friend']) && isset($values['wcs_email_friend'])) {
-                $return_string = $product_name . "</br><span>" . __('Destinataire', 'wcs-sell-coupons') . ": " . $values['wcs_name_friend'] . "</span></br><span>" . __('E-mail', 'wcs-sell-coupons') . ": " . $values['wcs_email_friend'] . '</span>';
+                $return_string = $product_name . "</br><span>" . __('To', 'wcs-sell-coupons') . ": " . $values['wcs_name_friend'] . " (" . $values['wcs_email_friend'] . ')</span>';
+                if ( isset($values['wcs_gift_message']) && $values['wcs_gift_message'] ){
+                    $return_string .= "<br /><span>" . stripslashes($values['wcs_gift_message']) . '</span>';
+                }
                 return $return_string;
             } else {
                 return $product_name;
@@ -230,6 +267,9 @@ if ( in_array( 'woocommerce/woocommerce.php', apply_filters( 'active_plugins', g
         function wcs_woocommerce_order_custom_session($name, $item) {
             if( $this->check_if_coupon_gift($item['product_id'] ) && isset($item['name_to']) && isset($item['mail_to'])) {
                 $return_string = $name . "<br />" . $item['name_to'] . "<br />" . $item['mail_to'];
+                if ( isset($item['gift_message']) && $item['gift_message'] ){
+                    $return_string .= "<br /><span>" . stripslashes($item['gift_message']) . '</span>';
+                }
                 return $return_string;
             } else {
                 return $name;
@@ -247,6 +287,7 @@ if ( in_array( 'woocommerce/woocommerce.php', apply_filters( 'active_plugins', g
                 // lets add the meta data to the order!
                 wc_add_order_item_meta($item_id,'_name_to', $values['wcs_name_friend']);
                 wc_add_order_item_meta($item_id,'_mail_to', $values['wcs_email_friend']);
+                wc_add_order_item_meta($item_id,'_gift_message', $values['wcs_gift_message']);
             }
         }
         
@@ -262,6 +303,12 @@ if ( in_array( 'woocommerce/woocommerce.php', apply_filters( 'active_plugins', g
             if($meta->key === '_mail_to') {
                 $display_key = __('E-mail', 'wcs-sell-coupons');
             }
+            if($meta->key === '_gift_message') {
+                $display_key = __('Message', 'wcs-sell-coupons');
+            }
+            if($meta->key === '_gift_code') {
+                $display_key = __('Coupon', 'wcs-sell-coupons');
+            }
             return $display_key;
         }
 
@@ -275,7 +322,8 @@ if ( in_array( 'woocommerce/woocommerce.php', apply_filters( 'active_plugins', g
             $cart = $woocommerce->cart->get_cart();
             // For each item in cart, if item is upsell of deleted product, delete it
             foreach( $cart as $key => $values) {
-            if ( $values['name_to'] == $cart_item_key ||  $values['mail_to'] == $cart_item_key)
+            if ( $values['name_to'] == $cart_item_key ||  $values['mail_to'] == $cart_item_key 
+                 ||  $values['gift_message'] == $cart_item_key)
                 unset( $woocommerce->cart->cart_contents[ $key ] );
             }
         }
@@ -283,6 +331,9 @@ if ( in_array( 'woocommerce/woocommerce.php', apply_filters( 'active_plugins', g
         /**
         *   Finally when an order is completed we create a coupon with the previously custom values
         *   This function is hooked on woocommerce_order_status_completed, when a payment is OK and NOT before.
+        *   TODO: Orders currently go to Processing on payment, manual move to completion before sending coupon 
+        *         is unnecessary:  for example if other goods are ordered at the same time 
+        *         order will not be completed until it is confirmed they have arrived
         */
         function wcs_create_coupon_on_order_complete($order_id) {
 
@@ -295,7 +346,7 @@ if ( in_array( 'woocommerce/woocommerce.php', apply_filters( 'active_plugins', g
             $duration_gift_coupon = get_option('wcs_gift_coupon_duration');
             $prefix_gift_coupon = get_option('wcs_gift_coupon_prefix');
 
-                $today = time();
+            $today = time();
             if( !empty($duration_gift_coupon) ) {
                 $date_expire = strtotime("+".$duration_gift_coupon." days", $today);
 
@@ -310,8 +361,8 @@ if ( in_array( 'woocommerce/woocommerce.php', apply_filters( 'active_plugins', g
                 if( $this->check_if_coupon_gift($values['product_id']) )  {
 
                     // Get the customer order values
-                    $client_first_name = get_post_meta($order->id, '_billing_first_name', true);
-                    $client_last_name = get_post_meta($order->id, '_billing_last_name', true);
+                    $client_first_name = get_post_meta($order_id, '_billing_first_name', true);
+                    $client_last_name = get_post_meta($order_id, '_billing_last_name', true);
 
                     // Create a nice name...
                     $client_name = $client_first_name .' '. $client_last_name;
@@ -319,111 +370,186 @@ if ( in_array( 'woocommerce/woocommerce.php', apply_filters( 'active_plugins', g
                     // Get the product price (gift amount)
                     $product = wc_get_product($values['product_id']);
                     $product_price = $product->get_regular_price('edit');
+                    // Amount coupon code
+                    $amount = $product_price; // Amount
 
                     // Get the custom order values : friend and email 
                     $friend_email = $values['item_meta']['_mail_to'];
                     $friend_name = $values['item_meta']['_name_to'];
+                    $friend_message = isset($values['item_meta']['_gift_message']) ? 
+                        stripslashes( $values['item_meta']['_gift_message'] ) : '';
 
-                    // Generate a random code
-                    $coupon_code = $this->wsc_random_number();
-                    // Amount coupon code
-                    $amount = $product_price; // Amount
-                    $discount_type = 'fixed_cart'; // Type: fixed_cart, percent, fixed_product, percent_product
+                    //if coupon already issued, get it, don't issue again by changing the status repeatedly
+                    $coupon_code = wc_get_order_item_meta($order_product_detail, '_gift_code');                    
+                    $new_coupon_id = ($coupon_code) ? post_exists($coupon_code) : 0;  
+                    if (! $new_coupon_id){
+                        // Generate a random code
+                        $coupon_code = strtolower($prefix_gift_coupon.'_'.$this->wsc_random_number());
 
-                    // Construct our coupon post
-                    $coupon = array(
-                        'post_title' => $prefix_gift_coupon.'_'.$coupon_code,
-                        'post_content' => '',
-                        'post_excerpt' => __('Pour:', 'wcs-sell-coupons').' ' . $friend_name . ' ' . 
-                                          __('- Envoyé à:', 'wcs-sell-coupons') . ' '. $friend_email,
-                        'post_status' => 'publish',
-                        'post_author' => 1,
-                        'post_type'     => 'shop_coupon'
-                    );
-
-                    // Check if coupon code exist, low probability but... If yes juste update values
-                    if(post_exists($coupon_code)) {
-                        $new_coupon_id = $coupon_code;          
-                        update_post_meta( $new_coupon_id, 'discount_type', $discount_type );
-                        update_post_meta( $new_coupon_id, 'coupon_amount', $amount );
-                        update_post_meta( $new_coupon_id, 'expiry_date', $expiry_date);
-                        update_post_meta( $new_coupon_id, 'date_expire', $date_expire);
-                        update_post_meta( $new_coupon_id, 'individual_use', 'yes' );
-                        update_post_meta( $new_coupon_id, 'usage_limit', '1' );
-                        update_post_meta( $new_coupon_id, 'usage_limit_per_user', '1' );
-                        update_post_meta($new_coupon_id, 'limit_usage_to_x_items', '1');
-                    // If not, create a new coupon post !
-                    } else {
+                        // Construct our coupon post
+                        $coupon = array(
+                            'post_title' => $coupon_code,
+                            'post_content' => '',
+                            'post_excerpt' => __('Pour:', 'wcs-sell-coupons').' ' . $friend_name . ' ' . 
+                                              __('- Envoyé à:', 'wcs-sell-coupons') . ' '. $friend_email . 
+                                              ' '. $friend_message,
+                            'post_status' => 'publish',
+                            'post_author' => 1,
+                            'post_type'   => 'shop_coupon',
+                        );
                         $new_coupon_id = wp_insert_post( $coupon );
-                        update_post_meta( $new_coupon_id, 'discount_type', $discount_type );
-                        update_post_meta( $new_coupon_id, 'coupon_amount', $amount );
-                        update_post_meta( $new_coupon_id, 'expiry_date', $expiry_date);
-                        update_post_meta( $new_coupon_id, 'date_expire', $date_expire);
-                        update_post_meta( $new_coupon_id, 'individual_use', 'yes' );
-                        update_post_meta( $new_coupon_id, 'usage_limit', '1' );
-                        update_post_meta( $new_coupon_id, 'usage_limit_per_user', '1' );
-                        update_post_meta($new_coupon_id, 'limit_usage_to_x_items', '1');
                     }
+                        
+                    $discount_type = 'fixed_cart'; // Type: fixed_cart, percent, fixed_product, percent_product
+                    /**
+                     * Filters the coupon rules meta data to create.
+                     *
+                     * @param array $coupon_meta keyed array of coupon attributes.
+                     */
+                    $coupon_meta = apply_filters('wcs_gift_coupon_meta', array(
+                        'discount_type' => $discount_type ,
+                        'coupon_amount' => $amount ,
+                        'expiry_date' => $expiry_date,
+                        'date_expires' => $date_expire,
+                        'individual_use' => 'yes' ,
+                        'usage_limit' => '1' ,
+                        'usage_limit_per_user' => '1' ,
+                        'limit_usage_to_x_items' => '1',
+                        //record some information to help trace this later
+                        '_name_to'    => $friend_name,
+                        '_mail_to'    => $friend_email,
+                        '_gift_message' => $friend_message,
+                        '_gift_from'  => $client_name,
+                        '_gift_order'      => $order_id                            
+                    ), $new_coupon_id, $coupon_code);
 
+                    // Insert coupon meta
+                    foreach ( $coupon_meta as $meta_key => $meta_value ) {
+                        update_post_meta( $new_coupon_id, $meta_key, $meta_value );
+                    }
+                        
+                    //attach the coupon reference to the order after to the coupon is correctly created
+                    //$item_id, $meta_key, $meta_value, $unique
+                    wc_add_order_item_meta($order_product_detail, '_gift_code', $coupon_code, TRUE);
+                    
                     // Finally send an email to the receiver with the coupon ID, client name, receiver email and name
-                    $this->wcs_sendEmail($new_coupon_id, $client_name, $friend_email, $friend_name);
+                    $this->wcs_sendEmail($order, $new_coupon_id, $client_name, $friend_email, $friend_name, $friend_message, $coupon_code);
                 }
             }
         }
 
         // Send an email to the receiver, params passed previously.
-        public function wcs_sendEmail ( $post, $client_name, $email, $name ) {
+        // TODO: $post is currently post of type coupon but may need order for language and copy original customer..
+        // TODO: better to do all from order, then can implement resend on order screen
+        // TODO: use WC_Coupon class rather than post for coupon data
+        public function wcs_sendEmail ($order, $post, $client_name, $email, $name, $friend_message, $coupon_code ) {
 
+            if (function_exists('pll_get_post_language')){
+                $locale = pll_get_post_language($order->get_id(), 'locale'); 
+                switch_to_locale($locale );
+            }
+
+            
             // Get the coupon code amount
             $coupon_amount = get_post_meta($post, 'coupon_amount', true);
-            $coupon_expire = get_post_meta($post, 'expiry_date', true);
+            $coupon_expire = get_post_meta($post, 'date_expires', true);
+            $coupon_has_expired = false;
+            if ($coupon_expire && strtotime($coupon_expire) && 
+                (current_time('timestamp', true) > strtotime($coupon_expire)) ){
+                $coupon_has_expired = true;
+            }
+            $usage_count = get_post_meta($post, 'usage_count', true);
+            //coupons are in shop base currency not current user/order currency so get unfiltered base ccy
+            $formatted_price = wc_price($coupon_amount, array('currency' => get_option( 'woocommerce_currency' ), ));
+                
+            /**
+             * allow theme to apply special formatting including link to auto-add-coupon to basket
+             * ( ?apply_coupon=coupon_code requires plugin, not implemented in woocommerce core)
+             * could also add fancy formatting / additional message and QR codes
+             *
+             * @param string $formatted_coupon_code default formatting
+             * @param string $coupon_code           raw coupon code
+             * @param string $coupon_amount         raw coupon amount
+             * @param string $formatted_price       formatted coupon amount
+             */
+            $formatted_coupon_code = apply_filters('wcs_format_gift_coupon', 
+                '<h2>' . $coupon_code . '</h2>', 
+                $coupon_code, $coupon_amount, $formatted_price);
 
             // Construct email datas
-            $blogname       = wp_specialchars_decode(get_option('blogname'), ENT_QUOTES);
-            $blogurl        = wp_specialchars_decode(get_option('home'), ENT_QUOTES);
+//get_current_site()->site_name; //wp_specialchars_decode(get_option('blogname'), ENT_QUOTES);
+            $blogname       = get_bloginfo( 'name', 'display' ); 
+            $blogurl        = get_home_url();
+            $shopurl        = wc_get_page_permalink ('shop');
             $subject        = '[' . $blogname . '] ' . $client_name . ' ' . __(' vous offre un chèque cadeau !', 'wcs-sell-coupons' ) ;
             $sendEmail      = get_bloginfo( 'admin_email' );
             $headers        = array('Content-Type: text/html; charset=UTF-8');
 
-            ob_start();
 
             // Instancy a new WC Mail class
             $mailer         = WC()->mailer();
 
+            ob_start();
             echo '<style >';
             wc_get_template( 'emails/email-styles.php' );
             echo '</style>';
+            $messageStyle        = ob_get_clean();
 
             $email_heading  = __( 'Votre chèque cadeau à utiliser sur ', 'wcs-sell-coupons' ) . ' <a href="' . $blogurl .'">'. $blogname . '</a>';
             $toEmail        = $email;
-            //coupons are in shop base currency not current user/order currency so get unfiltered base ccy
-            $formatted_price = wc_price($coupon_amount, array('currency' => get_option( 'woocommerce_currency' ), ));
             
-            //use post name (slug) as coupon code
-            //TODO: error strategy if coupon could not be retrieved correctly?
-            $post = get_post($post);            
-            $coupon_code = $post->post_name;
             
-            $theMessage     = '<h2>' . __('Bonjour ', 'wcs-sell-coupons' ) . ' ' . $name . ',</h2><p>'. $client_name . ' ' .
+            $theMessage     = $friend_message . ' <h2>' . __('Bonjour ', 'wcs-sell-coupons' ) . ' ' . $name . ',</h2><p>'. $client_name . ' ' .
                    __(' vous offre un chèque cadeau de ', 'wcs-sell-coupons' ) . ' ' . $formatted_price . ' ' .
-                   __(' à utiliser sur ', 'wcs-sell-coupons') . ' <a href="' . $blogurl .'">'. $blogname . '</a>.</p></br>
-            <p>' . __("Pour l'utiliser entrez ce code: ", 'wcs-sell-coupons' ) . 
-                '<strong>' . $coupon_code . '</strong> ' . 
+                   __(' à utiliser sur ', 'wcs-sell-coupons') . ' <a href="' . $shopurl .'">'. $blogname . '</a>.</p><br />';
+
+            if ($usage_count || $coupon_has_expired){
+                $theMessage .= '<h2>' . $coupon_code . '</h2> ';
+            } else {
+                $theMessage .= '<p>' . __("Pour l'utiliser entrez ce code: ", 'wcs-sell-coupons' ) . 
+                    ' <strong>' . $coupon_code . '</strong> ' . 
                 __('dans votre panier lors de votre achat.', 'wcs-sell-coupons') . '</p>';
+                $theMessage .= $formatted_coupon_code;
+            }
             if ($coupon_expire){
+                $formatted_coupon_expire = date("Y-m-d", $coupon_expire);
+                if ($coupon_has_expired){
+                    $theMessage .= '<p>' . sprintf(__('Please note: this coupon expired on %s and cannot be used, this email is for information only.', 'wcs-sell-coupons'), $formatted_coupon_expire) . '</p>';                                    
+                } else {
                 $theMessage .= '<p>' . __("Attention, ce chèque cadeau est valable seulement jusqu'au ", 
-                    'wcs-sell-coupons') .$coupon_expire.' !</p>';
-            }    
+                        'wcs-sell-coupons') . ' ' . $formatted_coupon_expire .' !</p>';
+                }
+            }
+            if ($usage_count){
+                $theMessage .= '<p>' . __('Please note: this coupon is already used and cannot be used again, this email is for information only.', 'wcs-sell-coupons') . '</p>';                
+            }
             $theMessage .= '<h3>' . __('A  bientôt sur ','wcs-sell-coupons') . ' <a href="' . $blogurl .'">'. $blogname . '</a> !</h3>';
 
-            echo $mailer->wrap_message( $email_heading, $theMessage );
-
-            $message        = ob_get_clean();
+            $messageBody = $mailer->wrap_message( $email_heading, $theMessage );
+            
             $attachment = '';
 
             // Send the email
-            $mailer->send( $toEmail, $subject, $message, $headers, $attachment );
+            $mailer->send( $toEmail, $subject, $messageStyle . $messageBody, $headers, $attachment );
 
+            //message to forward
+            $forwardedMessage = wptexturize('<br />-------------' . __('Copy of Message', 'wcs-sell-coupons') . '-------------<br />' . 
+                __('To:', 'wcs-sell-coupons') . ' ' . $name . ' &lt;' . $toEmail . '&gt;<br />' .
+                __('Subject:', 'wcs-sell-coupons') . ' ' . $subject . '<br /><br />')
+            . $messageBody;
+
+            // Send copy of email to client
+            $custEmail = $order->get_billing_email();
+            $custSubject = __('Your gift coupon was sent to:','wcs-sell-coupons') . ' ' . $name;
+            $mailer->send( $custEmail, $custSubject, $messageStyle . $custSubject . $forwardedMessage, 
+                $headers, $attachment );
+            
+            // Send copy of email to shop admin
+            //move to class implementation as $this->get_option( 'recipient', get_option( 'admin_email' ) );
+            $shopEmail = get_option( 'admin_email' );
+            $shopSubject = __('Gift coupon was issued for order:','wcs-sell-coupons') . ' ' . $order->get_id();
+            $mailer->send( $shopEmail, $shopSubject, $messageStyle . $shopSubject . $forwardedMessage, 
+                $headers, $attachment );
         }
 
         // Function to generate custom number used by wcs_create_coupon_on_order_complete and use wp_generate_password function
@@ -431,6 +557,35 @@ if ( in_array( 'woocommerce/woocommerce.php', apply_filters( 'active_plugins', g
             $random_number = wp_generate_password( 15, false );
             return $random_number;
         }
+
+        
+        
+		/**
+		 * Fires when the locale is switched.
+		 *
+		 * @since 4.7.0
+		 *
+		 * @param string $locale The new locale.
+		 */
+        public function wcs_switch_locale($locale){
+            $this->pluginlocale = $locale;
+            $this->load_textdomain();
+        }        
+        /**
+         * Filters a plugin's locale.
+         *
+         * @since 3.0.0
+         *
+         * @param string $locale The plugin's current locale.
+         * @param string $domain Text domain. Unique identifier for retrieving translated strings.
+         */
+        public function wcs_correct_locale($locale, $domain){
+            if ($this->pluginlocale){
+                return $this->pluginlocale;
+            } else {
+                return $locale;
+            }
+        }        
     }
     Woo_Sell_Coupons::register();
 }
