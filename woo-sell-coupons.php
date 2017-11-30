@@ -159,14 +159,12 @@ if ( in_array( 'woocommerce/woocommerce.php', apply_filters( 'active_plugins', g
                 $thumbnail = wp_get_attachment_image( get_post_thumbnail_id(), 'thumbnail');
                 if  ( $thumbnail ) { $gift_message .= '<br />' . $thumbnail; }
                 $gift_message = apply_filters('wcs_gift_message', $gift_message);
-                /*wp_editor($gift_message , 'wcs_gift_message', array(
-                    'media_buttons'    => false,
-                    'teeny'             => true,
-                    'quicktags' => false,
-                    'tinymce' => false,
-                    'editor_height' => '150'
-                ) );*/
-                echo '<textarea id="wcs_gift_message" name="wcs_gift_message" placeholder="Add your gift message here."></textarea>';
+
+                $gift_message_input = '<textarea id="wcs_gift_message" name="wcs_gift_message" placeholder="Add your gift message here."></textarea>';
+                // use add_filter('wcs_gift_message_input', 'custom_input', 10, 2); to override input type
+                $gift_message_input = apply_filters('wcs_gift_message_input', $gift_message_input, $gift_message);
+
+                echo $gift_message_input;
                 echo '</div>';
             }
         }
