@@ -159,23 +159,12 @@ if ( in_array( 'woocommerce/woocommerce.php', apply_filters( 'active_plugins', g
                 $thumbnail = wp_get_attachment_image( get_post_thumbnail_id(), 'thumbnail');
                 if  ( $thumbnail ) { $gift_message .= '<br />' . $thumbnail; }
                 $gift_message = apply_filters('wcs_gift_message', $gift_message);
-                wp_editor($gift_message , 'wcs_gift_message', array(
-                    'default_editor'    => 'TinyMCE',
-                    /*
-                    'wpautop'           => $r['wpautop'],
-                    'media_buttons'     => $r['media_buttons'],
-                    'textarea_rows'     => $r['textarea_rows'],
-                    'tabindex'          => $r['tabindex'],
-                    'tabfocus_elements' => $r['tabfocus_elements'],
-                    'editor_class'      => $r['editor_class'],
-                    'tinymce'           => $r['tinymce'],
-                    'teeny'             => $r['teeny'],
-                    'quicktags'         => $r['quicktags'],
-                    'dfw'               => $r['dfw'],
-                     * 
-                     */
-                ) );
-                //echo '<textarea id="wcs_gift_message" name="wcs_gift_message" placeholder="Add your gift message here."></textarea>';
+
+                $gift_message_input = '<textarea id="wcs_gift_message" name="wcs_gift_message" placeholder="Add your gift message here."></textarea>';
+                // use add_filter('wcs_gift_message_input', 'custom_input', 10, 2); to override input type
+                $gift_message_input = apply_filters('wcs_gift_message_input', $gift_message_input, $gift_message);
+
+                echo $gift_message_input;
                 echo '</div>';
             }
         }
