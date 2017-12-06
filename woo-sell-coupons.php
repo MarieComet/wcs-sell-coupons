@@ -71,6 +71,12 @@ if ( in_array( 'woocommerce/woocommerce.php', apply_filters( 'active_plugins', g
             add_filter('woocommerce_cart_item_name', array($this, 'wcs_add_user_custom_session'),1,3);
             add_filter('woocommerce_order_item_name', array($this, 'wcs_woocommerce_order_custom_session'), 10, 3 );
             add_action('woocommerce_add_order_item_meta', array($this, 'wcs_add_values_to_order_item_meta'),1,2);
+            
+            //hooks to allow editing of message in existing cart item
+            add_filter( 'woocommerce_cart_item_permalink', array($this, 'wcs_cart_item_permalink'), 10, 3);
+            add_filter( 'woocommerce_product_single_add_to_cart_text', array($this, 'wcs_product_single_add_to_cart_text'), 10, 2);
+
+            
             add_filter('woocommerce_order_item_display_meta_key', array($this, 'wcs_add_order_formatted_key'), 10, 2);
             add_action('woocommerce_before_cart_item_quantity_zero',array($this, 'wcs_remove_user_custom_data_options_from_cart') ,1,1);
             add_action('woocommerce_order_status_completed', array($this, 'wcs_create_coupon_on_order_complete') );
@@ -140,6 +146,12 @@ if ( in_array( 'woocommerce/woocommerce.php', apply_filters( 'active_plugins', g
             return $settings;
         }
 
+        function wcs_product_single_add_to_cart_text($text, $product){
+            if( $this->check_if_coupon_gift($product->get_id()) && isset($_GET['wcs']) ) {
+                $text = __('Update cart', 'wcs-sell-coupons');
+            }
+            return $text;
+        }
         /**
         *   Add two custom fields on the single product page before add to cart button.
         *   Hooked on woocommerce_before_add_to_cart_button 
@@ -147,20 +159,36 @@ if ( in_array( 'woocommerce/woocommerce.php', apply_filters( 'active_plugins', g
         function wcs_email_friend() {
             global $woocommerce, $post;
             if( $this->check_if_coupon_gift($post->ID)) {
+                $wcs_email_friend = $wcs_name_friend = $gift_message = '';
+                //wcs parameter is set if we are viewing from a cart item
+                if (isset($_GET['wcs'])){
+                    $cart_item_key = $_GET['wcs'];
+                    $cart_item = WC()->cart->get_cart_item($cart_item_key);
+                    if ( array_key_exists( 'wcs_email_friend', $cart_item ) )
+                        $wcs_email_friend = $cart_item['wcs_email_friend'];
+                    if ( array_key_exists( 'wcs_name_friend', $cart_item ) )
+                        $wcs_name_friend = $cart_item['wcs_name_friend'];
+                    if ( array_key_exists( 'wcs_gift_message', $cart_item ) )
+                        $gift_message = $cart_item['wcs_gift_message'];        
+                    
+                    echo '<input type="hidden" id="wcs" name="wcs" value="' . $cart_item_key . '" />';
+                }
+                
                 echo '<div class="wcs-data">';
                 echo '<label for="wcs_email_friend">' . __('E-mail du destinataire', 'wcs-sell-coupons') . ': <abbr class="required" title="requis">*</abbr></label>';
-                echo '<input type="email" id="wcs_email_friend" name="wcs_email_friend" placeholder="email@mail.com" />';
+                echo '<input type="email" id="wcs_email_friend" name="wcs_email_friend" placeholder="email@mail.com" value="' . $wcs_email_friend . '" />';
                 echo '<label for="wcs_name_friend">' . __('Nom et/ou prénom du destinataire', 'wcs-sell-coupons') . ': <abbr class="required" title="requis">*</abbr></label>';
-                echo '<input type="text" id="wcs_name_friend" name="wcs_name_friend" placeholder="Jean Dupont"/>';
+                echo '<input type="text" id="wcs_name_friend" name="wcs_name_friend" placeholder="Jean Dupont" value="' . $wcs_name_friend . '"/>';
                 echo '</div>';
 
                 echo '<label for="wcs_gift_message">' . __('Gift message', 'wcs-sell-coupons') . ': </label>';
-                $gift_message = __('Sending you this gift coupon with best wishes', 'wcs-sell-coupons');
-                $thumbnail = wp_get_attachment_image( get_post_thumbnail_id(), 'thumbnail');
-                if  ( $thumbnail ) { $gift_message .= '<br />' . $thumbnail; }
-                $gift_message = apply_filters('wcs_gift_message', $gift_message);
-
-                $gift_message_input = '<textarea id="wcs_gift_message" name="wcs_gift_message" placeholder="Add your gift message here."></textarea>';
+                if ($gift_message==''){
+                  $gift_message = __('Sending you this gift coupon with best wishes', 'wcs-sell-coupons');
+                  $thumbnail = wp_get_attachment_image( get_post_thumbnail_id(), 'thumbnail');
+                  if  ( $thumbnail ) { $gift_message .= '<br />' . $thumbnail; }
+                    $gift_message = apply_filters('wcs_gift_message', $gift_message);
+                  }
+                $gift_message_input = '<textarea id="wcs_gift_message" name="wcs_gift_message" placeholder="Add your gift message here.">'.$gift_message.'</textarea>';
                 // use add_filter('wcs_gift_message_input', 'custom_input', 10, 2); to override input type
                 $gift_message_input = apply_filters('wcs_gift_message_input', $gift_message_input, $gift_message);
 
@@ -179,9 +207,9 @@ if ( in_array( 'woocommerce/woocommerce.php', apply_filters( 'active_plugins', g
             // We'll use this to post back the data the server received
             print_r($_POST);
 
-            WC()->session->set('wcs_email_friend', $_POST['wcs_email_friend']);
-            WC()->session->set('wcs_name_friend', $_POST['wcs_email_friend']);
-            WC()->session->set('wcs_gift_message', $_POST['wcs_email_friend']);
+            //WC()->session->set('wcs_email_friend', $_POST['wcs_email_friend']);
+            //WC()->session->set('wcs_name_friend', $_POST['wcs_email_friend']);
+            //WC()->session->set('wcs_gift_message', $_POST['wcs_email_friend']);
             // RIP
             die();
         }
@@ -195,6 +223,12 @@ if ( in_array( 'woocommerce/woocommerce.php', apply_filters( 'active_plugins', g
             if( $this->check_if_coupon_gift($product_id ) )
                 if (!empty($_POST['wcs_email_friend']) && !empty($_POST['wcs_name_friend'])) {
                     $passed = true;
+                    //if this is modification of existing item, remove and re-add
+                    if (isset($_POST['wcs'])){
+                        $cart_item_key = $_GET['wcs'];
+                        WC()->cart->remove_cart_item($cart_item_key);
+                        //get_cart_item($cart_item_key);
+                    }
                 } else {
                     wc_add_notice( __( 'Renseignez les champs obligatoires.', 'wcs-sell-coupons' ), 'error' );
                     $passed = false;
@@ -311,10 +345,12 @@ if ( in_array( 'woocommerce/woocommerce.php', apply_filters( 'active_plugins', g
             $cart = $woocommerce->cart->get_cart();
             // For each item in cart, if item is upsell of deleted product, delete it
             foreach( $cart as $key => $values) {
-            if ( $values['name_to'] == $cart_item_key ||  $values['mail_to'] == $cart_item_key 
-                 ||  $values['gift_message'] == $cart_item_key)
-                unset( $woocommerce->cart->cart_contents[ $key ] );
-            }
+                if ( (isset($values['name_to']) && $values['name_to'] == $cart_item_key) ||  
+                   ( (isset($values['mail_to'])) && $values['mail_to'] == $cart_item_key) ||  
+                   ( (isset($values['gift_message'])) && $values['gift_message'] == $cart_item_key)){
+                  unset( $woocommerce->cart->cart_contents[ $key ] );
+              }
+          }
         }
 
         /**
