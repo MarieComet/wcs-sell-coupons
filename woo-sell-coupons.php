@@ -7,7 +7,7 @@
  * WC tested up to: 3.1.2
  * Plugin URI: https://github.com/MarieComet/wcs-sell-coupons
  * Description: This plugin create a new WooCommerce product type and add possibilty to sell Coupons as Gift Card in front-office. Please visit WooCommerce > Settings > General once activated !
- * Version: 1.0.2
+ * Version: 1.0.3
  * Author: Marie Comet
  * Author URI: https://www.mariecomet.fr/
  * License: GPLv2 or later
@@ -70,7 +70,7 @@ if ( in_array( 'woocommerce/woocommerce.php', apply_filters( 'active_plugins', g
             add_filter('woocommerce_get_cart_item_from_session', array($this, 'wcs_get_cart_items_from_session'), 1, 3 );
             add_filter('woocommerce_cart_item_name', array($this, 'wcs_add_user_custom_session'),1,3);
             add_filter('woocommerce_order_item_name', array($this, 'wcs_woocommerce_order_custom_session'), 10, 3 );
-            add_action('woocommerce_add_order_item_meta', array($this, 'wcs_add_values_to_order_item_meta'),1,2);
+            add_action( 'woocommerce_checkout_create_order_line_item', array( $this, 'wcs_add_values_to_order_item_meta' ), 10, 3);
             
             //hooks to allow editing of message in existing cart item
             add_filter( 'woocommerce_cart_item_permalink', array($this, 'wcs_cart_item_permalink'), 10, 3);
@@ -303,14 +303,14 @@ if ( in_array( 'woocommerce/woocommerce.php', apply_filters( 'active_plugins', g
         *   Add our custom fields values as order item values, it can be seen in the order admin page and we can get it later
         *   Hooked on woocommerce_add_order_item_meta
         */
-        function wcs_add_values_to_order_item_meta($item_id, $values) {
+		function wcs_add_values_to_order_item_meta( $item, $cart_item_key, $values ) {
             global $woocommerce,$wpdb;
 
             if( $this->check_if_coupon_gift($values['product_id'] ) && isset($values['wcs_name_friend']) && isset($values['wcs_email_friend'])) {
                 // lets add the meta data to the order!
-                wc_add_order_item_meta($item_id,'_name_to', $values['wcs_name_friend']);
-                wc_add_order_item_meta($item_id,'_mail_to', $values['wcs_email_friend']);
-                wc_add_order_item_meta($item_id,'_gift_message', $values['wcs_gift_message']);
+				$item->update_meta_data( '_name_to', $values['wcs_name_friend'] );
+				$item->update_meta_data( '_mail_to', $values['wcs_email_friend'] );
+				$item->update_meta_data( '_gift_message', $values['wcs_gift_message'] );
             }
         }
         

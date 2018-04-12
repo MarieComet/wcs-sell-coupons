@@ -3,7 +3,7 @@ Contributors: MarieComet, jonathanmoorebcsorg
 Donate link: ...
 Tags: woocommerce, coupons
 Requires at least: 4.7
-Tested up to: 4.8.1
+Tested up to: 4.9.5
 Stable tag: trunk
 License: GPLv3
 License URI: https://www.gnu.org/licenses/gpl.txt
@@ -44,6 +44,9 @@ Please use https://github.com/MarieComet/wcs-sell-coupons/issues.
 none yet
 
 == Changelog ==
+
+= 12/Apr/2018 =
+#20 replace obsolete hook woocommerce_add_order_item_meta
 
 = 20/Oct/2017 =
 #15 add gift message field
