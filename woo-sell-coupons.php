@@ -4,7 +4,7 @@
  * Text Domain: wcs-sell-coupons
  * Domain Path: /languages
  * WC requires at least: 3.0.0
- * WC tested up to: 3.1.2
+ * WC tested up to: 3.5.2
  * Plugin URI: https://github.com/MarieComet/wcs-sell-coupons
  * Description: This plugin create a new WooCommerce product type and add possibilty to sell Coupons as Gift Card in front-office. Please visit WooCommerce > Settings > General once activated !
  * Version: 1.0.2
@@ -12,7 +12,6 @@
  * Author URI: https://www.mariecomet.fr/
  * License: GPLv2 or later
  * @package WooCommerce Sell Coupons
- * @version 1.6
  */
 /**
  * Register the custom product type after init
@@ -41,11 +40,11 @@ if ( in_array( 'woocommerce/woocommerce.php', apply_filters( 'active_plugins', g
 
         private $pluginlocale;
     /**
-		 * load translations
-		 */
-		public static function load_textdomain() {
-			load_plugin_textdomain( 'wcs-sell-coupons', false, 'wcs-sell-coupons/languages/' );
-		}
+         * load translations
+         */
+        public static function load_textdomain() {
+            load_plugin_textdomain( 'wcs-sell-coupons', false, 'wcs-sell-coupons/languages/' );
+        }
 
         public function wcs_admin_notices() {
             if (get_option('wcs_gift_coupon_prefix')!=''){return;}
@@ -57,7 +56,7 @@ if ( in_array( 'woocommerce/woocommerce.php', apply_filters( 'active_plugins', g
         }
 
         public function __construct() {
-			add_action( 'plugins_loaded', array( __CLASS__, 'load_textdomain' ) );
+            add_action( 'plugins_loaded', array( __CLASS__, 'load_textdomain' ) );
             add_action('admin_notices', array($this, 'wcs_admin_notices'));
             add_action('wp_enqueue_scripts', array( $this, 'wcs_register_plugin_styles' ) );
             // Add custom option field in woocommerce general setting
@@ -70,7 +69,7 @@ if ( in_array( 'woocommerce/woocommerce.php', apply_filters( 'active_plugins', g
             add_filter('woocommerce_get_cart_item_from_session', array($this, 'wcs_get_cart_items_from_session'), 1, 3 );
             add_filter('woocommerce_cart_item_name', array($this, 'wcs_add_user_custom_session'),1,3);
             add_filter('woocommerce_order_item_name', array($this, 'wcs_woocommerce_order_custom_session'), 10, 3 );
-            add_action('woocommerce_add_order_item_meta', array($this, 'wcs_add_values_to_order_item_meta'),1,2);
+            add_action('woocommerce_checkout_create_order_line_item', array($this, 'wcs_add_values_to_order_item_meta'), 10, 4);
             add_filter('woocommerce_order_item_display_meta_key', array($this, 'wcs_add_order_formatted_key'), 10, 2);
             add_action('woocommerce_before_cart_item_quantity_zero',array($this, 'wcs_remove_user_custom_data_options_from_cart') ,1,1);
             add_action('woocommerce_order_status_completed', array($this, 'wcs_create_coupon_on_order_complete') );
@@ -269,14 +268,14 @@ if ( in_array( 'woocommerce/woocommerce.php', apply_filters( 'active_plugins', g
         *   Add our custom fields values as order item values, it can be seen in the order admin page and we can get it later
         *   Hooked on woocommerce_add_order_item_meta
         */
-        function wcs_add_values_to_order_item_meta($item_id, $values) {
-            global $woocommerce,$wpdb;
+        function wcs_add_values_to_order_item_meta( $item, $cart_item_key, $values, $order ) {
 
             if( $this->check_if_coupon_gift($values['product_id'] ) && isset($values['wcs_name_friend']) && isset($values['wcs_email_friend'])) {
-                // lets add the meta data to the order!
-                wc_add_order_item_meta($item_id,'_name_to', $values['wcs_name_friend']);
-                wc_add_order_item_meta($item_id,'_mail_to', $values['wcs_email_friend']);
-                wc_add_order_item_meta($item_id,'_gift_message', $values['wcs_gift_message']);
+                // lets add the meta data to the order
+
+                $item->update_meta_data( '_name_to', $values['wcs_name_friend'] );
+                $item->update_meta_data( '_mail_to', $values['wcs_email_friend'] );
+                $item->update_meta_data( '_gift_message', $values['wcs_gift_message'] );
             }
         }
         
@@ -549,13 +548,13 @@ if ( in_array( 'woocommerce/woocommerce.php', apply_filters( 'active_plugins', g
 
         
         
-		/**
-		 * Fires when the locale is switched.
-		 *
-		 * @since 4.7.0
-		 *
-		 * @param string $locale The new locale.
-		 */
+        /**
+         * Fires when the locale is switched.
+         *
+         * @since 4.7.0
+         *
+         * @param string $locale The new locale.
+         */
         public function wcs_switch_locale($locale){
             $this->pluginlocale = $locale;
             $this->load_textdomain();
