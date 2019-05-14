@@ -4,7 +4,7 @@
  * Text Domain: wcs-sell-coupons
  * Domain Path: /languages
  * WC requires at least: 3.0.0
- * WC tested up to: 3.5.2
+ * WC tested up to: 3.6.2
  * Plugin URI: https://github.com/MarieComet/wcs-sell-coupons
  * Description: This plugin create a new WooCommerce product type and add possibilty to sell Coupons as Gift Card in front-office. Please visit WooCommerce > Settings > General once activated !
  * Version: 1.0.2

@@ -6,8 +6,8 @@ Tags: woocommerce, coupons
 Requires at least: WordPress 4.7
 
 Tested up to:
-* WordPress 5.1
-* WooCommerce 3.5.5
+* WordPress 5.2
+* WooCommerce 3.6.2
 
 License: GPLv3
 License URI: https://www.gnu.org/licenses/gpl.txt
@@ -35,6 +35,10 @@ This section describes how to install the plugin and get it working.
 
 # Changelog
 
+= May 2019 =
+Updated translations (mixed french and english strings)
+Tested with WooCommerce 3.6.2 and WordPress 5.2
+
 = December 2018 =
  Update for WooCommerce 3.5.2
 
@@ -51,9 +55,8 @@ This section describes how to install the plugin and get it working.
 = Repositories =
 
 * [GitHub](https://github.com/MarieComet/wcs-sell-coupons/)
-* [WordPress.org](https://plugins.svn.wordpress.org/wcs-sell-coupons/)  [not available yet]
 
-= Recommended Plugins: =
+= Required Plugins: =
 
 This tool requires WooCommerce 3.x
 
