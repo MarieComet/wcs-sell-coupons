@@ -62,7 +62,7 @@ if ( in_array( 'woocommerce/woocommerce.php', apply_filters( 'active_plugins', g
 	 */
     function add_gift_coupon_product( $types ){
         // Key should be exactly the same as in the class
-        $types[ 'gift_coupon' ] = __( 'Chèque Cadeau', 'wcs-sell-coupons');
+        $types[ 'gift_coupon' ] = __( 'Gift card', 'wcs-sell-coupons');
         return $types;
     }
     add_filter( 'product_type_selector', 'add_gift_coupon_product' );
