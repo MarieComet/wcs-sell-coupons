@@ -3,3 +3,13 @@
 	display: inline-block;
 	margin: 15px 0;
 }
+
+.wcs-data label {
+	float: left;
+	min-width: 60%;
+}
+
+.wcs-data input {
+	float: left;
+	min-width: 40%;
+}
