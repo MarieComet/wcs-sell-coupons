@@ -1,5 +1,5 @@
 # WooCommerce Sell Coupons
-Contributors: MarieComet, jonathanmoorebcsorg, aksld
+Contributors: @MarieComet, @jonathanmoorebcsorg, @aksld, @sebastienserre
 
 Tags: woocommerce, coupons
 
