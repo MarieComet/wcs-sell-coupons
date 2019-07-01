@@ -52,7 +52,7 @@ if ( in_array( 'woocommerce/woocommerce.php', apply_filters( 'active_plugins', g
 	     * Load textdomain
 	     */
         public static function load_textdomain() {
-            load_plugin_textdomain( 'wcs-sell-coupons', false, 'wcs-sell-coupons/languages/' );
+            load_plugin_textdomain( 'wcs-sell-coupons', false, dirname( plugin_basename( __FILE__ ) ) . '/languages' );
         }
 
 	    /**
