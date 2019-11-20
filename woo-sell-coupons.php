@@ -192,7 +192,6 @@ if ( in_array( 'woocommerce/woocommerce.php', apply_filters( 'active_plugins', g
                 echo '<input type="email" id="wcs_email_friend" name="wcs_email_friend" placeholder="email@mail.com" />';
                 echo '<label for="wcs_name_friend">' . __('Name of the recipient', 'wcs-sell-coupons') . ': <abbr class="required" title="'. __( 'required', 'wcs-sell-coupons' ).'">*</abbr></label>';
                 echo '<input type="text" id="wcs_name_friend" name="wcs_name_friend" placeholder="'. __( 'John Doe', 'wcs-sell-coupons' ).'"/>';
-                echo '</div>';
 
                 echo '<label for="wcs_gift_message">' . __('Gift message', 'wcs-sell-coupons') . ': </label>';
                 $gift_message = __( 'Sending you this gift coupon with best wishes', 'wcs-sell-coupons' );
