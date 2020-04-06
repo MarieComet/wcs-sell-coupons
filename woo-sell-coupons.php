@@ -93,6 +93,9 @@ if ( in_array( 'woocommerce/woocommerce.php', apply_filters( 'active_plugins', g
 	        add_action( 'woocommerce_checkout_create_order_line_item', array( $this, 'wcs_add_values_to_order_item_meta' ), 10, 4 );
 	        add_filter( 'woocommerce_order_item_display_meta_key', array( $this, 'wcs_add_order_formatted_key' ), 10, 2 );
 	        add_action( 'woocommerce_before_cart_item_quantity_zero',array( $this, 'wcs_remove_user_custom_data_options_from_cart' ) ,1,1);
+
+	        add_action( 'woocommerce_cart_calculate_fees', array( $this, 'wcs_add_surcharge' ) );
+
 	        add_action( 'woocommerce_order_status_completed', array( $this, 'wcs_create_coupon_on_order_complete' ) );
 
             //locale management for translations
@@ -548,6 +551,36 @@ if ( in_array( 'woocommerce/woocommerce.php', apply_filters( 'active_plugins', g
             if ( $values['name_to'] === $cart_item_key ||  $values['mail_to'] === $cart_item_key || $values['gift_message'] == $cart_item_key || $values['address_to'] == $cart_item_key || $values['ship_method'] == $cart_item_key )
                 unset( $woocommerce->cart->cart_contents[ $key ] );
             }
+        }
+
+        /*
+         * Add cart fee is there is gift card product sent by mail
+         * Doc : https://docs.woocommerce.com/document/add-a-surcharge-to-cart-and-checkout-uses-fees-api/#section-2
+         */
+        function wcs_add_surcharge( $cart ) {
+        	global $woocommerce; 
+
+        	if ( is_admin() && ! defined( 'DOING_AJAX' ) ) 
+        	return;
+        	
+        	$wcs_gift_coupon_ship_price = get_option( 'wcs_gift_coupon_ship_price' );
+
+        	if ( !empty( $wcs_gift_coupon_ship_price ) ) {
+        		$fee_count = 0;
+
+        		// Loop through cart items
+    		    foreach ( $cart->get_cart() as $item ) {
+    		    	// if product has mail send method, add fee count
+    		    	if ( isset( $item[ 'wcs_send_method' ] ) && 'wcs_send_method_mail' === $item[ 'wcs_send_method' ] ) {
+    		    		$fee_count++;
+    		    	}
+    		    }
+    		    // if there is fee count, add fees for each product
+    		    if ( $fee_count > 0 ) {
+    		    	$fee = $fee_count * $wcs_gift_coupon_ship_price;
+    		    	$woocommerce->cart->add_fee( __( 'Gift shipping fees', 'wcs-sell-coupons' ), $fee, false, '' ); 
+    		    }
+        	}
         }
 
 	    /**
