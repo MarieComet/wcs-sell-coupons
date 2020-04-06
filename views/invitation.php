@@ -60,7 +60,7 @@
     <div class="message">
         
         <p>Vous venez de recevoir une invitation pour 2 personnes,<br>
-        <span>de la part de <?php echo $client_name ?></span><br>
+        <span>de la part de <?php echo $client_name ?> avec le message suivant : "<?php echo $friend_message; ?>"</span><br>
         à La Maison Tourangelle, entre roc et tuffeaux, dans une ancienne chartreuse,<br>
         transformée en auberge de charme, où il vous sera servi un repas gastronomique.</p>
 
