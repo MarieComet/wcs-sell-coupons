@@ -86,8 +86,6 @@ if ( in_array( 'woocommerce/woocommerce.php', apply_filters( 'active_plugins', g
 	        add_filter( 'woocommerce_general_settings', array( $this, 'wc_coupon_setting_page') );
 	        add_action( 'woocommerce_before_add_to_cart_button', array( $this, 'wcs_email_friend'), 10);
 	        add_action( 'woocommerce_add_to_cart_validation', array( $this, 'wcs_check_custom_fields'), 10, 5 );
-	        add_action( 'wp_ajax_custom_data', array( $this, 'wcs_custom_data_callback') );
-	        add_action( 'wp_ajax_nopriv_custom_data', array( $this, 'wcs_custom_data_callback') );
 	        add_filter( 'woocommerce_add_cart_item_data', array( $this, 'wcs_add_cart_item_custom_data'), 10, 2 );
 	        add_filter( 'woocommerce_get_cart_item_from_session', array( $this, 'wcs_get_cart_items_from_session'), 1, 3 );
 	        add_filter( 'woocommerce_cart_item_name', array( $this, 'wcs_add_user_custom_session' ), 1, 3 );
@@ -266,23 +264,6 @@ if ( in_array( 'woocommerce/woocommerce.php', apply_filters( 'active_plugins', g
                 </div>
                 <?php
             }
-        }
-
-	    /**
-	     * Our callback function receive our two custom fields value
-	     * We create a new session with session_start(); and create two new session values : wcs_email_friend and wcs_name_friend
-	     *
-	     * Hooked on wp_ajax_nopriv_custom_data and wp_ajax_custom_data See ajax in WordPress
-	     */
-        function wcs_custom_data_callback() {
-            // We'll use this to post back the data the server received
-            print_r($_POST);
-
-            WC()->session->set('wcs_email_friend', $_POST['wcs_email_friend']);
-            WC()->session->set('wcs_name_friend', $_POST['wcs_email_friend']);
-            WC()->session->set('wcs_gift_message', $_POST['wcs_email_friend']);
-            // RIP
-            die();
         }
 
 	    /**
