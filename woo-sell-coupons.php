@@ -423,7 +423,7 @@ if ( in_array( 'woocommerce/woocommerce.php', apply_filters( 'active_plugins', g
         			$return_string .= '<br/><span>' . __( 'Email :', 'wcs-sell-coupons' ) . ' ' . $values['wcs_email_friend'] . '</span>';
         		}
         		if ( isset( $values['wcs_address_friend'] ) && ! empty( $values['wcs_address_friend'] ) ) {
-        			$return_string .= '<br/><span>' . __( 'Address :', 'wcs-sell-coupons' ) . ' ' . $item['wcs_address_friend'] . '</span>';
+        			$return_string .= '<br/><span>' . __( 'Address :', 'wcs-sell-coupons' ) . ' ' . $values['wcs_address_friend'] . '</span>';
         		}
         		if ( isset( $values['wcs_gift_message'] ) && $values['wcs_gift_message'] && !empty( $values['wcs_gift_message'] ) ) {
         		    $return_string .= '<br/><span>' . stripslashes($values['wcs_gift_message']) . '</span>';
