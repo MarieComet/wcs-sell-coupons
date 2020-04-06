@@ -172,6 +172,17 @@ if ( in_array( 'woocommerce/woocommerce.php', apply_filters( 'active_plugins', g
 	        );
 
 	        $settings[] = array(
+		        'title'       => __( 'Gift cards shipping price', 'wcs-sell-coupons' ),
+		        'desc'        => __( 'Shipping price per gift card (product)', 'wcs-sell-coupons' ),
+		        'id'          => 'wcs_gift_coupon_ship_price',
+		        'desc_tip'    => '',
+		        'type'        => 'number',
+		        'default'     => '',
+		        'css'         => 'min-width:300px;',
+		        'placeholder' => __( '10', 'wcs-sell-coupons' ),
+	        );
+
+	        $settings[] = array(
 	                'type' => 'sectionend',
                     'id'   => 'wcs_gift_coupon'
             );
@@ -187,9 +198,26 @@ if ( in_array( 'woocommerce/woocommerce.php', apply_filters( 'active_plugins', g
         function wcs_email_friend() {
             global $woocommerce, $post;
             if ( $this->check_if_coupon_gift( $post->ID ) ) {
+
+            	$wcs_gift_coupon_ship_price = get_option( 'wcs_gift_coupon_ship_price' );
+            	if ( !empty( $wcs_gift_coupon_ship_price ) ) {
+            		$option_mail_price = sprintf(
+            			'(%1$s%2$s)',
+            			$wcs_gift_coupon_ship_price,
+            			get_woocommerce_currency_symbol()
+            		);
+            	}
                 ?>
                 <div class="wcs-data">
                 	<p>Les champs dotés d'une * sont requis.</p>
+                    <p>
+                    	<label for="wcs_send_method"><?php _e( 'Choose the shipping method :', 'wcs-sell-coupons' ); ?></label>
+                    	<select name="wcs_send_method">
+                    		<option value="wcs_send_method_email"><?php _e( 'Email', 'wcs-sell-coupons' ); ?></option>
+                    		<option value="wcs_send_method_mail"><?php _e( 'Mail', 'wcs-sell-coupons' ); ?> <?php esc_html_e( $option_mail_price ); ?></option>
+                    		<option value="wcs_send_method_pos"><?php _e( 'Restaurant withdrawal', 'wcs-sell-coupons' ); ?></option>
+                    	</select>
+                	</p>
                     <p>
                     	<label for="wcs_email_friend"><?php _e( 'Adresse e-mail du destinataire :', 'wcs-sell-coupons' ); ?>
 	                        <abbr class="required" title="<?php _e( 'required', 'wcs-sell-coupons' ); ?>">*
