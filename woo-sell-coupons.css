@@ -13,3 +13,7 @@
 	float: left;
 	min-width: 40%;
 }
+
+.wcs-address-friend {
+	display: none;
+}
