@@ -92,6 +92,7 @@ if ( in_array( 'woocommerce/woocommerce.php', apply_filters( 'active_plugins', g
 	        add_filter( 'woocommerce_order_item_name', array( $this, 'wcs_woocommerce_order_custom_session' ), 10, 3 );
 	        add_action( 'woocommerce_checkout_create_order_line_item', array( $this, 'wcs_add_values_to_order_item_meta' ), 10, 4 );
 	        add_filter( 'woocommerce_order_item_display_meta_key', array( $this, 'wcs_add_order_formatted_key' ), 10, 2 );
+	        add_filter( 'woocommerce_hidden_order_itemmeta', array( $this, 'wcs_hide_my_item_meta' ), 10, 1 );
 	        add_action( 'woocommerce_before_cart_item_quantity_zero',array( $this, 'wcs_remove_user_custom_data_options_from_cart' ) ,1,1);
 
 	        add_action( 'woocommerce_cart_calculate_fees', array( $this, 'wcs_add_surcharge' ) );
@@ -417,18 +418,18 @@ if ( in_array( 'woocommerce/woocommerce.php', apply_filters( 'active_plugins', g
         function wcs_add_user_custom_session( $product_name, $values, $cart_item_key ) {
 
         	if ( $this->check_if_coupon_gift($values['product_id'] ) && isset( $values['wcs_name_friend'] ) && ! empty( $values['wcs_name_friend'] ) ) {
-        		$return_string = $product_name . '</br><span>' . __( 'To :', 'wcs-sell-coupons' ) . ' ' . $values['wcs_name_friend'] . '</span>';
+        		$return_string = '<b>' . $product_name . '</b><br/><span>' . __( 'To :', 'wcs-sell-coupons' ) . ' ' . $values['wcs_name_friend'] . '</span>';
         		if ( isset( $values['wcs_email_friend'] ) && ! empty( $values['wcs_email_friend'] ) ) {
-        			$return_string .= ' (' . $values['wcs_email_friend'] . ')';
+        			$return_string .= '<br/><span>' . __( 'Email :', 'wcs-sell-coupons' ) . ' ' . $item['wcs_email_friend'] . '</span>';
         		}
         		if ( isset( $values['wcs_address_friend'] ) && ! empty( $values['wcs_address_friend'] ) ) {
-        			$return_string .= ' (' . $values['wcs_address_friend'] . ')';
+        			$return_string .= '<br/><span>' . __( 'Address :', 'wcs-sell-coupons' ) . ' ' . $item['wcs_address_friend'] . '</span>';
         		}
         		if ( isset( $values['wcs_gift_message'] ) && $values['wcs_gift_message'] && !empty( $values['wcs_gift_message'] ) ) {
         		    $return_string .= '<br/><span>' . stripslashes($values['wcs_gift_message']) . '</span>';
         		}
         		if ( isset( $values['wcs_send_method_label'] ) && $values['wcs_send_method_label'] && !empty( $values['wcs_send_method_label'] ) ) {
-        		    $return_string .= '<br/><span>' . __( 'Shipping method :', 'wcs-sell-coupons' ) . ' '  . $values['wcs_send_method_label'] . '</span>';
+        		    $return_string .= '<br/><span>' . __( 'Shipping method :', 'wcs-sell-coupons' ) . ' '  . $values['wcs_send_method_label'] . '</span><br/>';
         		}
         		return $return_string;
         	} else {
@@ -450,18 +451,18 @@ if ( in_array( 'woocommerce/woocommerce.php', apply_filters( 'active_plugins', g
         function wcs_woocommerce_order_custom_session( $name, $item ) {
 
         	if ( $this->check_if_coupon_gift( $item['product_id'] ) && isset( $item['name_to'] ) && ! empty( $item['name_to'] ) ) {
-        		$return_string = $name . '</br><span>' . __( 'To :', 'wcs-sell-coupons' ) . ' ' . $item['name_to'] . '</span>';
+        		$return_string = '<b>' . $name . '</b><br/><span>' . __( 'To :', 'wcs-sell-coupons' ) . ' ' . $item['name_to'] . '</span>';
         		if ( isset( $item['mail_to'] ) && ! empty( $item['mail_to'] ) ) {
-        			$return_string .= ' (' . $item['mail_to'] . ')';
+        			$return_string .= '<br/><span>' . __( 'Email :', 'wcs-sell-coupons' ) . ' ' . $item['mail_to'] . '</span>';
         		}
         		if ( isset( $item['address_to'] ) && ! empty( $item['address_to'] ) ) {
-        			$return_string .= ' (' . $item['address_to'] . ')';
+        			$return_string .= '<br/><span>' . __( 'Address :', 'wcs-sell-coupons' ) . ' ' . $item['address_to'] . '</span>';
         		}
         		if ( isset( $item['gift_message'] ) && $item['gift_message'] && !empty( $item['gift_message'] ) ) {
-        		    $return_string .= '<br/><span>' . stripslashes($item['gift_message']) . '</span>';
+        		    $return_string .= '<br/><span>' . __( 'Message :', 'wcs-sell-coupons' ) . ' ' . stripslashes($item['gift_message']) . '</span>';
         		}
-        		if ( isset( $item['ship_method'] ) && $item['ship_method'] && !empty( $item['ship_method'] ) ) {
-        		    $return_string .= '<br/><span>' . __( 'Shipping method :', 'wcs-sell-coupons' ) . ' '  . $item['ship_method'] . '</span>';
+        		if ( isset( $item['ship_method_label'] ) && $item['ship_method_label'] && !empty( $item['ship_method_label'] ) ) {
+        		    $return_string .= '<br/><span>' . __( 'Shipping method :', 'wcs-sell-coupons' ) . ' '  . $item['ship_method_label'] . '</span><br/>';
         		}
         		return $return_string;
         	} else {
@@ -496,7 +497,10 @@ if ( in_array( 'woocommerce/woocommerce.php', apply_filters( 'active_plugins', g
                 	$item->update_meta_data( '_address_to', $values['wcs_address_friend'] );
                 }
                 if ( isset( $values['wcs_send_method_label'] ) && !empty( $values['wcs_send_method_label'] ) ) {
-                	$item->update_meta_data( '_ship_method', $values['wcs_send_method_label'] );
+                	$item->update_meta_data( '_ship_method_label', $values['wcs_send_method_label'] );
+                }
+                if ( isset( $values['wcs_send_method'] ) && !empty( $values['wcs_send_method'] ) ) {
+                	$item->update_meta_data( '_ship_method', $values['wcs_send_method'] );
                 }
                 
             }
@@ -522,7 +526,7 @@ if ( in_array( 'woocommerce/woocommerce.php', apply_filters( 'active_plugins', g
 	        if ( $meta->key === '_address_to' ) {
 	    	    $display_key = __( 'Address', 'wcs-sell-coupons' );
 	        }
-            if ( $meta->key === '_ship_method' ) {
+            if ( $meta->key === '_ship_method_label' ) {
         	    $display_key = __( 'Shipping method', 'wcs-sell-coupons' );
             }
 		    if ( $meta->key === '_gift_message' ) {
@@ -533,6 +537,17 @@ if ( in_array( 'woocommerce/woocommerce.php', apply_filters( 'active_plugins', g
 		    }
 
 		    return $display_key;
+	    }
+
+	    /**
+	     * Hide custom item meta from order view
+	     */
+	    function wcs_hide_my_item_meta( $hidden_meta ) {
+
+	    	// hide the _ship_method meta
+	    	$hidden_meta[] = '_ship_method';
+	    	  
+	    	return $hidden_meta;
 	    }
 
 	    /**
@@ -631,8 +646,18 @@ if ( in_array( 'woocommerce/woocommerce.php', apply_filters( 'active_plugins', g
                     // Amount coupon code
                     $amount = $product_price; // Amount
 
-                    // Get the custom order values : friend and email 
-	                $friend_email   = $values['item_meta']['_mail_to'];
+                    $send_email = false;
+                    $friend_email = '';
+                    // Get the custom order values : friend and email
+                    if ( isset( $values['item_meta']['_mail_to'] ) && !empty( $values['item_meta']['_mail_to'] ) ) { 
+	                	$friend_email   = $values['item_meta']['_mail_to'];
+	                }
+
+	                // if gift shipping method == email
+	                if ( !empty( $friend_email ) && 'wcs_send_method_email' === $values['item_meta'][ '_ship_method' ] ) {
+	                	$send_email = true;
+	                }
+
 	                $friend_name    = $values['item_meta']['_name_to'];
 	                $friend_message = isset( $values['item_meta']['_gift_message'] ) ? stripslashes( $values['item_meta']['_gift_message'] ) : '';
 
@@ -647,7 +672,7 @@ if ( in_array( 'woocommerce/woocommerce.php', apply_filters( 'active_plugins', g
 		                $coupon = array(
 			                'post_title'   => $coupon_code,
 			                'post_content' => '',
-			                'post_excerpt' => __( 'To:', 'wcs-sell-coupons' ) . ' ' . $friend_name . ' ' . __( '- Sent to:', 'wcs-sell-coupons' ) . ' ' . $friend_email . ' ' . $friend_message,
+			                'post_excerpt' => __( 'To:', 'wcs-sell-coupons' ) . ' ' . $friend_name . ' ' . __( '- Sent to:', 'wcs-sell-coupons' ) . ' ' . $friend_email,
 			                'post_status'  => 'publish',
 			                'post_author'  => 1,
 			                'post_type'    => 'shop_coupon',
@@ -688,7 +713,10 @@ if ( in_array( 'woocommerce/woocommerce.php', apply_filters( 'active_plugins', g
                     wc_add_order_item_meta( $order_product_detail, '_gift_code', $coupon_code, TRUE );
                     
                     // Finally send an email to the receiver with the coupon ID, client name, receiver email and name
-                    $this->wcs_sendEmail($order, $new_coupon_id, $client_name, $friend_email, $friend_name, $friend_message, $coupon_code);
+                    if ( $send_email ) {
+                    	error_log(print_r('send email', true));
+                    	$this->wcs_sendEmail($order, $new_coupon_id, $client_name, $friend_email, $friend_name, $friend_message, $coupon_code);
+                    }
                 }
             }
         }
@@ -824,7 +852,7 @@ if ( in_array( 'woocommerce/woocommerce.php', apply_filters( 'active_plugins', g
 	     * @return string
 	     */
         function wsc_random_number() {
-            $random_number = wp_generate_password( 15, false );
+            $random_number = wp_rand( 100000, 999999 );
             return $random_number;
         }
 
