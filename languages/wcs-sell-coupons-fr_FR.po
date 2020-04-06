@@ -5,8 +5,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Blank WordPress Pot v1.0.0\n"
 "Report-Msgid-Bugs-To: Translator Name <translations@example.com>\n"
-"POT-Creation-Date: 2019-07-05 09:09+0000\n"
-"PO-Revision-Date: 2019-07-05 11:48+0000\n"
+"POT-Creation-Date: 2020-04-06 18:51+0200\n"
+"PO-Revision-Date: 2020-04-06 18:53+0200\n"
 "Last-Translator: sebastienserre <sebastien@thivinfo.com>\n"
 "Language-Team: French (France)\n"
 "Language: fr_FR\n"
@@ -17,13 +17,21 @@ msgstr ""
 "X-Textdomain-Support: yesX-Generator: Poedit 1.6.4\n"
 "X-Poedit-SourceCharset: UTF-8\n"
 "X-Poedit-KeywordsList: __;_e;esc_html_e;esc_html_x:1,2c;esc_html__;"
-"esc_attr_e;esc_attr_x:1,2c;esc_attr__;_ex:1,2c;_nx:4c,1,2;_nx_noop:4c,1,2;_x:"
-"1,2c;_n:1,2;_n_noop:1,2;__ngettext:1,2;__ngettext_noop:1,2;_c,_nc:4c,1,2\n"
+"esc_attr_e;esc_attr_x:1,2c;esc_attr__;_ex:1,2c;_nx:4c,1,2;_nx_noop:4c,1,2;"
+"_x:1,2c;_n:1,2;_n_noop:1,2;__ngettext:1,2;__ngettext_noop:1,2;_c,_nc:4c,1,2\n"
 "X-Poedit-Basepath: ..\n"
-"X-Generator: Loco https://localise.biz/\n"
+"X-Generator: Poedit 2.0.6\n"
+"X-Loco-Version: 2.3.0; wp-5.2.2\n"
 "X-Poedit-SearchPath-0: .\n"
 "X-Poedit-SearchPathExcluded-0: .git\n"
-"X-Loco-Version: 2.3.0; wp-5.2.2"
+
+#: wcs-register-coupon.php:47
+msgid "Gift card can only be sold individually"
+msgstr ""
+
+#: wcs-register-coupon.php:65
+msgid "Gift card"
+msgstr "Carte cadeau"
 
 #: woo-sell-coupons.php:70
 msgid ""
@@ -33,140 +41,207 @@ msgstr ""
 "Veuillez visiter WooCommerce > Réglages > Général pour configure WooCommerce "
 "Sell Coupons !"
 
-#: woo-sell-coupons.php:146
+#: woo-sell-coupons.php:152
 msgid "Gift cards"
 msgstr "Cartes cadeaux"
 
-#: woo-sell-coupons.php:153
+#: woo-sell-coupons.php:159
 msgid "Duration of gift cars"
 msgstr "Durée des cartes cadeaux"
 
-#: woo-sell-coupons.php:156
+#: woo-sell-coupons.php:162
 msgid "Validity period of gift cards (in days)"
 msgstr "Période de validité des cartes cadeaux (en jours)"
 
-#: woo-sell-coupons.php:160
+#: woo-sell-coupons.php:166
 msgid "30"
 msgstr "30"
 
-#: woo-sell-coupons.php:164
+#: woo-sell-coupons.php:170
 msgid "Gift cards code prefix"
 msgstr "Préfixe des codes de cartes cadeaux"
 
-#: woo-sell-coupons.php:167
+#: woo-sell-coupons.php:173
 msgid "Prefix used for coupon codes"
 msgstr "Préfixe utilisé pour les codes des coupons"
 
-#: woo-sell-coupons.php:171
+#: woo-sell-coupons.php:177
 msgid "GF"
 msgstr "CC"
 
-#: woo-sell-coupons.php:191
-msgid "Recipient e-mail"
-msgstr "E-mail du destinataire"
+#: woo-sell-coupons.php:181
+msgid "Gift cards shipping price"
+msgstr "Frais d'envoi des cartes cadeaux"
 
-#: woo-sell-coupons.php:191 woo-sell-coupons.php:193
+#: woo-sell-coupons.php:182
+msgid "Shipping price per gift card (product)"
+msgstr "Frais d'envoi par carte cadeau (produit)"
+
+#: woo-sell-coupons.php:188
+msgid "10"
+msgstr "10"
+
+#: woo-sell-coupons.php:220
+msgid "Choose the shipping method :"
+msgstr "Choisissez la méthode d'envoi :"
+
+#: woo-sell-coupons.php:222 woo-sell-coupons.php:344
+msgid "Email"
+msgstr "E-mail"
+
+#: woo-sell-coupons.php:223 woo-sell-coupons.php:348
+msgid "Mail"
+msgstr "Courrier"
+
+#: woo-sell-coupons.php:224 woo-sell-coupons.php:352
+msgid "Restaurant withdrawal"
+msgstr "Retrait au restaurant"
+
+#: woo-sell-coupons.php:228
+msgid "Recipient e-mail address :"
+msgstr "Adresse e-mail du destinataire :"
+
+#: woo-sell-coupons.php:229 woo-sell-coupons.php:237 woo-sell-coupons.php:245
 msgid "required"
 msgstr "requis"
 
-#: woo-sell-coupons.php:193
+#: woo-sell-coupons.php:236
+msgid "Recipient address :"
+msgstr "Adresse du destinataire :"
+
+#: woo-sell-coupons.php:240
+msgid "Number, Street, City, Zipcode"
+msgstr "Numéro et nom de la rue, code postal, ville"
+
+#: woo-sell-coupons.php:244
 msgid "Name of the recipient"
 msgstr "Nom du destinataire"
 
-#: woo-sell-coupons.php:194
+#: woo-sell-coupons.php:249
 msgid "John Doe"
 msgstr "Jean Dupont"
 
-#: woo-sell-coupons.php:197
+#: woo-sell-coupons.php:252
 msgid "Gift message"
 msgstr "Message de la carte cadeau"
 
-#: woo-sell-coupons.php:198
+#: woo-sell-coupons.php:256
 msgid "Sending you this gift coupon with best wishes"
 msgstr "Je t'envoie ce coupon cadeau avec mes meilleurs vœux"
 
-#: woo-sell-coupons.php:203
+#: woo-sell-coupons.php:262
 msgid "Add your gift message here."
 msgstr "Ajoutez votre message de carte cadeau ici."
 
-#: woo-sell-coupons.php:246
+#: woo-sell-coupons.php:300
 msgid "Please fill in the required fields"
 msgstr "Veuillez remplir tous les champs requis"
 
-#: woo-sell-coupons.php:316
-msgid "To"
-msgstr "Pour"
+#: woo-sell-coupons.php:356
+msgid "None"
+msgstr "Aucun"
 
-#: woo-sell-coupons.php:381
+#: woo-sell-coupons.php:421 woo-sell-coupons.php:454
+msgid "To :"
+msgstr "À :"
+
+#: woo-sell-coupons.php:423 woo-sell-coupons.php:456
+msgid "Email :"
+msgstr "E-mail :"
+
+#: woo-sell-coupons.php:426 woo-sell-coupons.php:459
+msgid "Address :"
+msgstr "Adresse :"
+
+#: woo-sell-coupons.php:432 woo-sell-coupons.php:465
+msgid "Shipping method :"
+msgstr "Méthode d'envoi :"
+
+#: woo-sell-coupons.php:462
+msgid "Message :"
+msgstr "Message :"
+
+#: woo-sell-coupons.php:521
 msgid "Recipient"
 msgstr "Destinataire"
 
-#: woo-sell-coupons.php:384
+#: woo-sell-coupons.php:524
 msgid "E-mail"
 msgstr "E-mail"
 
-#: woo-sell-coupons.php:387
+#: woo-sell-coupons.php:527
+msgid "Address"
+msgstr "Adresse"
+
+#: woo-sell-coupons.php:530
+msgid "Shipping method"
+msgstr "Méthode d'envoi"
+
+#: woo-sell-coupons.php:533
 msgid "Message"
 msgstr "Message"
 
-#: woo-sell-coupons.php:390
+#: woo-sell-coupons.php:536
 msgid "Coupon"
 msgstr "Coupon"
 
-#: woo-sell-coupons.php:478 woo-sell-coupons.php:633
+#: woo-sell-coupons.php:596
+msgid "Gift shipping fees"
+msgstr "Frais d'envoi carte cadeau"
+
+#: woo-sell-coupons.php:675 woo-sell-coupons.php:832
 msgid "To:"
 msgstr "Pour :"
 
-#: woo-sell-coupons.php:478
+#: woo-sell-coupons.php:675
 msgid "- Sent to:"
 msgstr "- Envoyé à :"
 
-#: woo-sell-coupons.php:574
+#: woo-sell-coupons.php:774
 msgid " offers you a gift card !"
 msgstr "vous offre une carte cadeau !"
 
-#: woo-sell-coupons.php:632
+#: woo-sell-coupons.php:831
 msgid "Copy of Message"
 msgstr "Copie du message"
 
-#: woo-sell-coupons.php:634
+#: woo-sell-coupons.php:833
 msgid "Subject:"
 msgstr "Sujet : "
 
-#: woo-sell-coupons.php:639
+#: woo-sell-coupons.php:838
 msgid "Your gift coupon was sent to: "
 msgstr "Votre bon cadeau a été envoyé à: "
 
-#: woo-sell-coupons.php:645
+#: woo-sell-coupons.php:844
 msgid "Gift coupon was issued for order: "
 msgstr "Ce Bon cadeau a été généré pour la commande: "
 
-#: wcs-register-coupon.php:65
-msgid "Gift card"
-msgstr "Carte cadeau"
+#, fuzzy
+#~| msgid "Recipient e-mail"
+#~ msgid "Recipient mailing address :"
+#~ msgstr "E-mail du destinataire"
 
-#. Name of the plugin
-msgid "WooCommerce Sell Coupons"
-msgstr "WooCommerce Sell Coupons"
+#~ msgid "To"
+#~ msgstr "Pour"
 
-#. Description of the plugin
-msgid ""
-"This plugin create a new WooCommerce product type and add possibilty to sell "
-"Coupons as Gift Card in front-office. Please visit WooCommerce > Settings > "
-"General once activated !"
-msgstr ""
-"This plugin create a new WooCommerce product type and add possibilty to sell "
-"Coupons as Gift Card in front-office. Please visit WooCommerce > Settings > "
-"General once activated !"
+#~ msgid "WooCommerce Sell Coupons"
+#~ msgstr "WooCommerce Sell Coupons"
 
-#. URI of the plugin
-msgid "https://github.com/MarieComet/wcs-sell-coupons"
-msgstr "https://github.com/MarieComet/wcs-sell-coupons"
+#~ msgid ""
+#~ "This plugin create a new WooCommerce product type and add possibilty to "
+#~ "sell Coupons as Gift Card in front-office. Please visit WooCommerce > "
+#~ "Settings > General once activated !"
+#~ msgstr ""
+#~ "This plugin create a new WooCommerce product type and add possibilty to "
+#~ "sell Coupons as Gift Card in front-office. Please visit WooCommerce > "
+#~ "Settings > General once activated !"
 
-#. Author of the plugin
-msgid "Marie Comet"
-msgstr "Marie Comet"
+#~ msgid "https://github.com/MarieComet/wcs-sell-coupons"
+#~ msgstr "https://github.com/MarieComet/wcs-sell-coupons"
 
-#. Author URI of the plugin
-msgid "https://www.mariecomet.fr/"
-msgstr "https://www.mariecomet.fr/"
+#~ msgid "Marie Comet"
+#~ msgstr "Marie Comet"
+
+#~ msgid "https://www.mariecomet.fr/"
+#~ msgstr "https://www.mariecomet.fr/"

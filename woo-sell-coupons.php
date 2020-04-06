@@ -225,7 +225,7 @@ if ( in_array( 'woocommerce/woocommerce.php', apply_filters( 'active_plugins', g
                     	</select>
                 	</p>
                     <p class="wcs-email-friend">
-                    	<label for="wcs_email_friend"><?php _e( 'Adresse e-mail du destinataire :', 'wcs-sell-coupons' ); ?>
+                    	<label for="wcs_email_friend"><?php _e( 'Recipient e-mail address :', 'wcs-sell-coupons' ); ?>
 	                        <abbr class="required" title="<?php _e( 'required', 'wcs-sell-coupons' ); ?>">*
 	                        </abbr>                 	
 	                        <br>
@@ -233,7 +233,7 @@ if ( in_array( 'woocommerce/woocommerce.php', apply_filters( 'active_plugins', g
                 	    </label>
                 	</p>
                     <p class="wcs-address-friend">
-                    	<label for="wcs_address_friend"><?php _e( 'Recipient mailing address :', 'wcs-sell-coupons' ); ?>
+                    	<label for="wcs_address_friend"><?php _e( 'Recipient address :', 'wcs-sell-coupons' ); ?>
 	                        <abbr class="required" title="<?php _e( 'required', 'wcs-sell-coupons' ); ?>">*
 	                        </abbr>                 	
 	                        <br>
