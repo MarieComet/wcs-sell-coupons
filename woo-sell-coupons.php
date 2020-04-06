@@ -31,6 +31,7 @@ if ( in_array( 'woocommerce/woocommerce.php', apply_filters( 'active_plugins', g
 
     // require register coupon product type class
     require_once( WSC__PLUGIN_DIR . 'wcs-register-coupon.php' );
+	require_once __DIR__ . '/vendor/autoload.php';
 
 	/**
 	 * Class Woo_Sell_Coupons
@@ -120,16 +121,15 @@ if ( in_array( 'woocommerce/woocommerce.php', apply_filters( 'active_plugins', g
             return false;
         }
 
-        /**
-         * Register and enqueue style sheet.
-         */
-        public function wcs_register_plugin_styles() {
-            /*
-            wp_register_style( 'wcs-sell-coupons', plugins_url( 'wcs-sell-coupons/wcs-sell-coupons.css',  dirname(__FILE__)  ) );
-            wp_enqueue_style( 'wcs-sell-coupons' );
-             * 
-             */
-        }
+	    /**
+	     * Register and enqueue style sheet.
+	     */
+	    public function wcs_register_plugin_styles() {
+
+		    wp_enqueue_style( 'wcs-sell-coupons', plugins_url( 'wcs-sell-coupons/woo-sell-coupons.css',  dirname
+		    (__FILE__)  ) );
+
+	    }
 
         /**
          *
@@ -187,24 +187,44 @@ if ( in_array( 'woocommerce/woocommerce.php', apply_filters( 'active_plugins', g
         function wcs_email_friend() {
             global $woocommerce, $post;
             if ( $this->check_if_coupon_gift( $post->ID ) ) {
-                echo '<div class="wcs-data">';
-                echo '<label for="wcs_email_friend">' . __('Recipient e-mail', 'wcs-sell-coupons') . ': <abbr class="required" title="'. __( 'required', 'wcs-sell-coupons' ).'">*</abbr></label>';
-                echo '<input type="email" id="wcs_email_friend" name="wcs_email_friend" placeholder="email@mail.com" />';
-                echo '<label for="wcs_name_friend">' . __('Name of the recipient', 'wcs-sell-coupons') . ': <abbr class="required" title="'. __( 'required', 'wcs-sell-coupons' ).'">*</abbr></label>';
-                echo '<input type="text" id="wcs_name_friend" name="wcs_name_friend" placeholder="'. __( 'John Doe', 'wcs-sell-coupons' ).'"/>';
-
-                echo '<label for="wcs_gift_message">' . __('Gift message', 'wcs-sell-coupons') . ': </label>';
-                $gift_message = __( 'Sending you this gift coupon with best wishes', 'wcs-sell-coupons' );
-                $thumbnail = wp_get_attachment_image( get_post_thumbnail_id(), 'thumbnail' );
-                if  ( $thumbnail ) { $gift_message .= '<br />' . $thumbnail; }
-                $gift_message = apply_filters('wcs_gift_message', $gift_message);
-
-                $gift_message_input = '<textarea id="wcs_gift_message" name="wcs_gift_message" placeholder="'. __( 'Add your gift message here.', 'wcs-sell-coupons' ).'"></textarea>';
-                // use add_filter('wcs_gift_message_input', 'custom_input', 10, 2); to override input type
-                $gift_message_input = apply_filters( 'wcs_gift_message_input', $gift_message_input, $gift_message );
-
-                echo $gift_message_input;
-                echo '</div>';
+                ?>
+                <div class="wcs-data">
+                	<p>Les champs dotés d'une * sont requis.</p>
+                    <p>
+                    	<label for="wcs_email_friend"><?php _e( 'Adresse e-mail du destinataire :', 'wcs-sell-coupons' ); ?>
+	                        <abbr class="required" title="<?php _e( 'required', 'wcs-sell-coupons' ); ?>">*
+	                        </abbr>                 	
+	                        <br>
+                	        <input type="email" id="wcs_email_friend" name="wcs_email_friend" placeholder="email@mail.com"/>
+                	    </label>
+                	</p>
+                	<p>
+	                    <label for="wcs_name_friend"><?php _e( 'Name of the recipient', 'wcs-sell-coupons' ) ?>:
+	                        <abbr class="required" title="<?php _e( 'required', 'wcs-sell-coupons' ); ?>">*</abbr>
+	                    </label>
+	                	<br>
+	                    <input type="text" id="wcs_name_friend" name="wcs_name_friend"
+	                           placeholder="<?php _e( 'John Doe', 'wcs-sell-coupons' ) ?>"/>
+	                </p>
+	                <p>
+	                    <label for="wcs_gift_message"> <?php _e( 'Gift message', 'wcs-sell-coupons' ) ?>: </label>
+	                	<br>
+	                
+			            <?php
+			            $gift_message = __( 'Sending you this gift coupon with best wishes', 'wcs-sell-coupons' );
+			            $thumbnail    = wp_get_attachment_image( get_post_thumbnail_id(), 'thumbnail' );
+			            if ( $thumbnail ) {
+				            $gift_message .= '<br />' . $thumbnail;
+			            }
+			            $gift_message = apply_filters( 'wcs_gift_message', $gift_message );
+			            $gift_message_input = '<textarea id="wcs_gift_message" name="wcs_gift_message" placeholder="' . __( 'Add your gift message here.', 'wcs-sell-coupons' ) . '"></textarea>';
+			            // use add_filter('wcs_gift_message_input', 'custom_input', 10, 2); to override input type
+			            $gift_message_input = apply_filters( 'wcs_gift_message_input', $gift_message_input, $gift_message );
+			            echo $gift_message_input;
+			            ?>
+		          	</p>
+                </div>
+                <?php
             }
         }
 
@@ -575,6 +595,23 @@ if ( in_array( 'woocommerce/woocommerce.php', apply_filters( 'active_plugins', g
             $headers        = array('Content-Type: text/html; charset=UTF-8');
 
 
+            // create folder to store pdf (if not exists)
+	        global $wp_filesystem;
+	        $wp_upload_dir = wp_upload_dir();
+
+	        if ( ! file_exists( $wp_upload_dir['basedir'] . '/invitations' ) ) {
+		        mkdir( $wp_upload_dir['basedir'] . '/invitations', 0777, true );
+	        }
+	        $order_id = trim(str_replace('#', '', $order->get_order_number()));
+            // create a pdf
+            $mpdf = new\Mpdf\Mpdf();
+            $pdf_name= 'invitation-'. $order_id . '-' . $name . '-' . $coupon_code . '.pdf';
+	        ob_start();
+            require 'views/invitation.php';
+            $html = ob_get_flush();
+            $mpdf->WriteHTML( $html );
+            $mpdf->Output( $wp_upload_dir['basedir'] . '/invitations/'. $pdf_name, \Mpdf\Output\Destination::FILE );
+
             // Instancy a new WC Mail class
             $mailer         = WC()->mailer();
 
@@ -584,38 +621,27 @@ if ( in_array( 'woocommerce/woocommerce.php', apply_filters( 'active_plugins', g
             echo '</style>';
             $messageStyle        = ob_get_clean();
 
-            $email_heading  = __( 'Your gift card to use on ', 'wcs-sell-coupons' ) . ' <a href="' . $blogurl .'">'. $blogname . '</a>';
+            $email_heading  = '<a style="text-align: center;" href="' . $blogurl .'">Votre cadeau à <br>'. $blogname . '</a>';
             $toEmail        = $email;
-            
-            
-            $theMessage     = $friend_message . ' <h2>' . __('Hello ', 'wcs-sell-coupons' ) . ' ' . $name . ',</h2><p>'. $client_name . ' ' .
-                   __(' offers you a gift card ', 'wcs-sell-coupons' ) . ' ' . $formatted_price . ' ' .
-                   __(' to use on ', 'wcs-sell-coupons') . ' <a href="' . $shopurl .'">'. $blogname . '</a>.</p><br />';
 
-            if ( $usage_count || $coupon_has_expired ){
-                $theMessage .= '<h2>' . $coupon_code . '</h2> ';
-            } else {
-                $theMessage .= '<p>' . __("To use it enter this code : ", 'wcs-sell-coupons' ) . 
-                    ' <strong>' . $coupon_code . '</strong> ' . 
-                __( 'in your basket during your purchase.', 'wcs-sell-coupons') . '</p>';
-                $theMessage .= $formatted_coupon_code;
-            }
-            if ( $coupon_expire ) {
-                $formatted_coupon_expire = date( "Y-m-d", $coupon_expire );
-                if ( $coupon_has_expired ){
-                    $theMessage .= '<p>' . sprintf( __( 'Please note: this coupon expired on %s and cannot be used, this email is for information only.', 'wcs-sell-coupons' ), $formatted_coupon_expire ) . '</p>';
-                } else {
-	                $theMessage .= '<p>' . __( "Warning, this coupon is only valid until ", 'wcs-sell-coupons' ) . ' ' . $formatted_coupon_expire . ' !</p>';
-                }
-            }
+            ob_start();
+            ?>
+            <h2>Bonjour <?php echo $name;?></h2>
+            <p><?php echo $client_name; ?> vous a offert un repas au Restaurant La Maison Tourangelle en vous laissant ce message :</p>
+            <p><?php echo $friend_message; ?></p>
+            <p>Pour en profiter, présentez le document joint à cet e-mail avant le <?php echo date_i18n( 'd F Y', $coupon_expire ) ?>.</p>
+            <p>A bientôt dans notre restaurant.</p>
+            <p>Frédéric ARNAULT</p>
 
-            if ( $usage_count ) {
-                $theMessage .= '<p>' . __( 'Please note: this coupon is already used and cannot be used again, this email is for information only.', 'wcs-sell-coupons' ) . '</p>';
-            }
 
-            $theMessage .= '<h3>' . __( 'See you soon on ','wcs-sell-coupons' ) . ' <a href="' . $blogurl .'">'. $blogname . '</a> !</h3>';
+<?php
+            $theMessage = ob_get_flush();
+
             $messageBody = $mailer->wrap_message( $email_heading, $theMessage );
-            $attachment  = '';
+            $attachment  = $wp_upload_dir['basedir'] . '/invitations/'. $pdf_name;
+
+            // register in media lib
+	        $this->wcs_register_pdf_in_library( $order, $attachment );
 
             // Send the email
             $mailer->send( $toEmail, $subject, $messageStyle . $messageBody, $headers, $attachment );
@@ -628,13 +654,13 @@ if ( in_array( 'woocommerce/woocommerce.php', apply_filters( 'active_plugins', g
 
             // Send copy of email to client
             $custEmail   = $order->get_billing_email();
-            $custSubject = __( 'Your gift coupon was sent to:','wcs-sell-coupons' ) . ' ' . $name;
+            $custSubject = __( 'Your gift coupon was sent to: ','wcs-sell-coupons' ) . $name;
 	        $mailer->send( $custEmail, $custSubject, $messageStyle . $custSubject . $forwardedMessage, $headers, $attachment );
             
             // Send copy of email to shop admin
             //move to class implementation as $this->get_option( 'recipient', get_option( 'admin_email' ) );
             $shopEmail = get_option( 'admin_email' );
-            $shopSubject = __( 'Gift coupon was issued for order:','wcs-sell-coupons' ) . ' ' . $order->get_id();
+            $shopSubject = __( 'Gift coupon was issued for order: ','wcs-sell-coupons' ) . $order->get_id();
 	        $mailer->send( $shopEmail, $shopSubject, $messageStyle . $shopSubject . $forwardedMessage, $headers, $attachment );
         }
 
@@ -675,7 +701,30 @@ if ( in_array( 'woocommerce/woocommerce.php', apply_filters( 'active_plugins', g
             } else {
                 return $locale;
             }
-        }        
+        }
+
+        public function wcs_register_pdf_in_library( $order, $attachment_path ){
+	        $filetype      = wp_check_filetype( $attachment_path , null );
+            $attachment = [
+	            'guid'           => $attachment_path,
+	            'post_mime_type' => $filetype['type'],
+	            'post_title'     => preg_replace( '/\.[^.]+$/', '', basename( $attachment_path ) ),
+	            'post_content'   => '',
+	            'post_status'    => 'inherit',
+            ];
+	        $attachment_id = wp_insert_attachment( $attachment, $attachment_path, $order->get_id() );
+
+	        update_post_meta( $attachment_id, '_wp_attachment_image_alt', 'gift card for' . $order->get_id() );
+
+	        // Make sure that this file is included, as wp_generate_attachment_metadata() depends on it.
+	        require_once ABSPATH . 'wp-admin/includes/image.php';
+
+	        // Generate the metadata for the attachment, and update the database record.
+	        $attach_data = wp_generate_attachment_metadata( $attachment_id, $attachment_path );
+	        wp_update_attachment_metadata( $attachment_id, $attach_data );
+
+	        return $attachment_id;
+        }
     }
     Woo_Sell_Coupons::register();
 }

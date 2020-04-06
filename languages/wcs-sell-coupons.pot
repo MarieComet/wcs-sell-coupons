@@ -4,71 +4,30 @@
 #, fuzzy
 msgid ""
 msgstr ""
-"Project-Id-Version: "
-"Blank WordPress Pot "
-"v1.0.0\n"
-"POT-Creation-Date: "
-"2019-05-14 12:41+0200\n"
-"PO-Revision-Date: \n"
-"Last-Translator: Your "
-"Name <you@example.com>\n"
-"Language-Team: Your Team "
-"<translations@example."
-"com>\n"
-"Report-Msgid-Bugs-To: "
-"Translator Name "
-"<translations@example."
-"com>\n"
+"Project-Id-Version: Blank WordPress Pot v1.0.0\n"
+"POT-Creation-Date: 2019-07-05 09:09+0000\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: Your Name <you@example.com>\n"
+"Language-Team: Your Team <translations@example.com>\n"
+"Report-Msgid-Bugs-To: Translator Name <translations@example.com>\n"
 "MIME-Version: 1.0\n"
-"Content-Type: text/"
-"plain; charset=UTF-8\n"
-"Content-Transfer-"
-"Encoding: 8bit\n"
-"Plural-Forms: "
-"nplurals=2; plural=n != "
-"1;\n"
-"X-Textdomain-Support: "
-"yesX-Generator: Poedit "
-"1.6.4\n"
-"X-Poedit-SourceCharset: "
-"UTF-8\n"
-"X-Poedit-KeywordsList: "
-"__;_e;esc_html_e;"
-"esc_html_x:1,2c;"
-"esc_html__;esc_attr_e;"
-"esc_attr_x:1,2c;"
-"esc_attr__;_ex:1,2c;"
-"_nx:4c,1,2;"
-"_nx_noop:4c,1,2;_x:1,2c;"
-"_n:1,2;_n_noop:1,2;"
-"__ngettext:1,2;"
-"__ngettext_noop:1,2;_c,"
-"_nc:4c,1,2\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=INTEGER; plural=EXPRESSION;\n"
+"X-Textdomain-Support: yesX-Generator: Poedit 1.6.4\n"
+"X-Poedit-SourceCharset: UTF-8\n"
+"X-Poedit-KeywordsList: __;_e;esc_html_e;esc_html_x:1,2c;esc_html__;"
+"esc_attr_e;esc_attr_x:1,2c;esc_attr__;_ex:1,2c;_nx:4c,1,2;_nx_noop:4c,1,2;_x:"
+"1,2c;_n:1,2;_n_noop:1,2;__ngettext:1,2;__ngettext_noop:1,2;_c,_nc:4c,1,2\n"
 "X-Poedit-Basepath: ..\n"
-"Language: en_US\n"
-"X-Generator: Poedit "
-"1.8.7\n"
-"X-Poedit-"
-"SearchPath-0: .\n"
-"X-Poedit-"
-"SearchPathExcluded-0: ."
-"git\n"
+"Language: \n"
+"X-Generator: Loco https://localise.biz/\n"
+"X-Poedit-SearchPath-0: .\n"
+"X-Poedit-SearchPathExcluded-0: .git\n"
 
-#: wcs-register-coupon.php:47
+#: woo-sell-coupons.php:70
 msgid ""
-"Gift card can only be "
-"sold individually"
-msgstr ""
-
-#: wcs-register-coupon.php:65
-msgid "Chèque Cadeau"
-msgstr ""
-
-#: woo-sell-coupons.php:69
-msgid ""
-"Please visit WooCommerce "
-"> Settings > General to "
-"setup WooCommerce Sell "
+"Please visit WooCommerce > Settings > General to setup WooCommerce Sell "
 "Coupons !"
 msgstr ""
 
@@ -77,14 +36,11 @@ msgid "Gift cards"
 msgstr ""
 
 #: woo-sell-coupons.php:153
-msgid ""
-"Duration of gift cars"
+msgid "Duration of gift cars"
 msgstr ""
 
 #: woo-sell-coupons.php:156
-msgid ""
-"Validity period of gift "
-"cards (in days)"
+msgid "Validity period of gift cards (in days)"
 msgstr ""
 
 #: woo-sell-coupons.php:160
@@ -92,14 +48,11 @@ msgid "30"
 msgstr ""
 
 #: woo-sell-coupons.php:164
-msgid ""
-"Gift cards code prefix"
+msgid "Gift cards code prefix"
 msgstr ""
 
 #: woo-sell-coupons.php:167
-msgid ""
-"Prefix used for coupon "
-"codes"
+msgid "Prefix used for coupon codes"
 msgstr ""
 
 #: woo-sell-coupons.php:171
@@ -110,14 +63,12 @@ msgstr ""
 msgid "Recipient e-mail"
 msgstr ""
 
-#: woo-sell-coupons.php:191
-#: woo-sell-coupons.php:193
+#: woo-sell-coupons.php:191 woo-sell-coupons.php:193
 msgid "required"
 msgstr ""
 
 #: woo-sell-coupons.php:193
-msgid ""
-"Name of the recipient"
+msgid "Name of the recipient"
 msgstr ""
 
 #: woo-sell-coupons.php:194
@@ -129,21 +80,15 @@ msgid "Gift message"
 msgstr ""
 
 #: woo-sell-coupons.php:198
-msgid ""
-"Sending you this gift "
-"coupon with best wishes"
+msgid "Sending you this gift coupon with best wishes"
 msgstr ""
 
 #: woo-sell-coupons.php:203
-msgid ""
-"Add your gift message "
-"here."
+msgid "Add your gift message here."
 msgstr ""
 
 #: woo-sell-coupons.php:246
-msgid ""
-"Please fill in the "
-"required fields"
+msgid "Please fill in the required fields"
 msgstr ""
 
 #: woo-sell-coupons.php:316
@@ -166,94 +111,57 @@ msgstr ""
 msgid "Coupon"
 msgstr ""
 
-#: woo-sell-coupons.php:478
-#: woo-sell-coupons.php:626
+#: woo-sell-coupons.php:478 woo-sell-coupons.php:633
 msgid "To:"
 msgstr ""
 
 #: woo-sell-coupons.php:478
-msgid "- Envoyé à:"
+msgid "- Sent to:"
 msgstr ""
 
 #: woo-sell-coupons.php:574
-msgid ""
-" offers you a gift card !"
-msgstr ""
-
-#: woo-sell-coupons.php:588
-msgid ""
-"Your gift card to use on "
-msgstr ""
-
-#: woo-sell-coupons.php:592
-msgid "Hello "
-msgstr ""
-
-#: woo-sell-coupons.php:593
-msgid ""
-" offers you a gift card "
-msgstr ""
-
-#: woo-sell-coupons.php:594
-msgid " to use on "
-msgstr ""
-
-#: woo-sell-coupons.php:599
-msgid ""
-"To use it enter this "
-"code : "
-msgstr ""
-
-#: woo-sell-coupons.php:601
-msgid ""
-"in your basket during "
-"your purchase."
-msgstr ""
-
-#: woo-sell-coupons.php:607
-#, php-format
-msgid ""
-"Please note: this coupon "
-"expired on %s and cannot "
-"be used, this email is "
-"for information only."
-msgstr ""
-
-#: woo-sell-coupons.php:609
-msgid ""
-"Warning, this coupon is "
-"only valid until "
-msgstr ""
-
-#: woo-sell-coupons.php:614
-msgid ""
-"Please note: this coupon "
-"is already used and "
-"cannot be used again, "
-"this email is for "
-"information only."
-msgstr ""
-
-#: woo-sell-coupons.php:617
-msgid "See you soon on "
-msgstr ""
-
-#: woo-sell-coupons.php:625
-msgid "Copy of Message"
-msgstr ""
-
-#: woo-sell-coupons.php:627
-msgid "Subject:"
+msgid " offers you a gift card !"
 msgstr ""
 
 #: woo-sell-coupons.php:632
-msgid ""
-"Your gift coupon was "
-"sent to:"
+msgid "Copy of Message"
 msgstr ""
 
-#: woo-sell-coupons.php:638
+#: woo-sell-coupons.php:634
+msgid "Subject:"
+msgstr ""
+
+#: woo-sell-coupons.php:639
+msgid "Your gift coupon was sent to: "
+msgstr ""
+
+#: woo-sell-coupons.php:645
+msgid "Gift coupon was issued for order: "
+msgstr ""
+
+#: wcs-register-coupon.php:65
+msgid "Gift card"
+msgstr ""
+
+#. Name of the plugin
+msgid "WooCommerce Sell Coupons"
+msgstr ""
+
+#. Description of the plugin
 msgid ""
-"Gift coupon was issued "
-"for order:"
+"This plugin create a new WooCommerce product type and add possibilty to sell "
+"Coupons as Gift Card in front-office. Please visit WooCommerce > Settings > "
+"General once activated !"
+msgstr ""
+
+#. URI of the plugin
+msgid "https://github.com/MarieComet/wcs-sell-coupons"
+msgstr ""
+
+#. Author of the plugin
+msgid "Marie Comet"
+msgstr ""
+
+#. Author URI of the plugin
+msgid "https://www.mariecomet.fr/"
 msgstr ""
