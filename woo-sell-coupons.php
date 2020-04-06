@@ -420,7 +420,7 @@ if ( in_array( 'woocommerce/woocommerce.php', apply_filters( 'active_plugins', g
         	if ( $this->check_if_coupon_gift($values['product_id'] ) && isset( $values['wcs_name_friend'] ) && ! empty( $values['wcs_name_friend'] ) ) {
         		$return_string = '<b>' . $product_name . '</b><br/><span>' . __( 'To :', 'wcs-sell-coupons' ) . ' ' . $values['wcs_name_friend'] . '</span>';
         		if ( isset( $values['wcs_email_friend'] ) && ! empty( $values['wcs_email_friend'] ) ) {
-        			$return_string .= '<br/><span>' . __( 'Email :', 'wcs-sell-coupons' ) . ' ' . $item['wcs_email_friend'] . '</span>';
+        			$return_string .= '<br/><span>' . __( 'Email :', 'wcs-sell-coupons' ) . ' ' . $values['wcs_email_friend'] . '</span>';
         		}
         		if ( isset( $values['wcs_address_friend'] ) && ! empty( $values['wcs_address_friend'] ) ) {
         			$return_string .= '<br/><span>' . __( 'Address :', 'wcs-sell-coupons' ) . ' ' . $item['wcs_address_friend'] . '</span>';
@@ -786,7 +786,7 @@ if ( in_array( 'woocommerce/woocommerce.php', apply_filters( 'active_plugins', g
 	        $order_id = trim(str_replace('#', '', $order->get_order_number()));
             // create a pdf
             $mpdf = new\Mpdf\Mpdf();
-            $pdf_name= 'invitation-'. $order_id . '-' . $name . '-' . $coupon_code . '.pdf';
+            $pdf_name= 'invitation-'. $order_id . '-' . sanitize_title( $name ) . '-' . $coupon_code . '.pdf';
 	        ob_start();
             require 'views/invitation.php';
             $html = ob_get_flush();
@@ -884,7 +884,14 @@ if ( in_array( 'woocommerce/woocommerce.php', apply_filters( 'active_plugins', g
             }
         }
 
+        public function wcs_invitation_skip_images_sizes( $payload, $orig_w, $orig_h, $dest_w, $dest_h, $crop ) {
+		 return false;
+		}
+
         public function wcs_register_pdf_in_library( $order, $attachment_path ){
+
+        	add_filter( 'image_resize_dimensions', array( $this, 'wcs_invitation_skip_images_sizes' ), 10, 6 );
+
 	        $filetype      = wp_check_filetype( $attachment_path , null );
             $attachment = [
 	            'guid'           => $attachment_path,
@@ -903,6 +910,8 @@ if ( in_array( 'woocommerce/woocommerce.php', apply_filters( 'active_plugins', g
 	        // Generate the metadata for the attachment, and update the database record.
 	        $attach_data = wp_generate_attachment_metadata( $attachment_id, $attachment_path );
 	        wp_update_attachment_metadata( $attachment_id, $attach_data );
+
+	        remove_filter( 'image_resize_dimensions', array( $this, 'wcs_invitation_skip_images_sizes' ), 10, 6 );
 
 	        return $attachment_id;
         }
