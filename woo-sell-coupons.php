@@ -128,12 +128,10 @@ if ( in_array( 'woocommerce/woocommerce.php', apply_filters( 'active_plugins', g
 	     */
 	    public function wcs_register_plugin_styles() {
 
-		    wp_enqueue_style( 'wcs-sell-coupons', plugins_url( 'wcs-sell-coupons/woo-sell-coupons.css',  dirname
-		    (__FILE__)  ) );
+		    wp_enqueue_style( 'wcs-sell-coupons', plugin_dir_url( __FILE__) . 'woo-sell-coupons.css' );
 
 		    if ( is_singular( 'product' ) && $this->check_if_coupon_gift( get_the_ID() ) ) {
-		    	wp_enqueue_script( 'wcs-sell-coupons-js', plugins_url( 'wcs-sell-coupons/js/wcs-sell-coupons.js',  dirname
-		    (__FILE__)  ), [ 'jquery' ] );
+		    	wp_enqueue_script( 'wcs-sell-coupons-js', plugin_dir_url( __FILE__) . 'js/wcs-sell-coupons.js', [ 'jquery' ] );
 		    }
 	    }
 
