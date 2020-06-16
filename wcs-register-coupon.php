@@ -44,7 +44,7 @@ if ( in_array( 'woocommerce/woocommerce.php', apply_filters( 'active_plugins', g
             public function set_sold_individually( $sold_individually ) {
                 $this->set_prop( 'sold_individually', true );
                 if ( false === $sold_individually ) {
-                    $this->error( 'product_gift_coupon_invalid_manage_stock', __( 'Gift card can only be sold individually', 'woocommerce' ) );
+                    $this->error( 'product_gift_coupon_invalid_manage_stock', __( 'Gift card can only be sold individually', 'wcs-sell-coupons' ) );
                 }
             }
         }
