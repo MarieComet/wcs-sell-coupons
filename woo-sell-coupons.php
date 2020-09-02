@@ -120,16 +120,15 @@ if ( in_array( 'woocommerce/woocommerce.php', apply_filters( 'active_plugins', g
             return false;
         }
 
-        /**
-         * Register and enqueue style sheet.
-         */
-        public function wcs_register_plugin_styles() {
-            /*
-            wp_register_style( 'wcs-sell-coupons', plugins_url( 'wcs-sell-coupons/wcs-sell-coupons.css',  dirname(__FILE__)  ) );
-            wp_enqueue_style( 'wcs-sell-coupons' );
-             * 
-             */
-        }
+	    /**
+	     * Register and enqueue style sheet.
+	     */
+	    public function wcs_register_plugin_styles() {
+
+		    wp_enqueue_style( 'wcs-sell-coupons', plugins_url( 'wcs-sell-coupons/woo-sell-coupons.css',  dirname
+		    (__FILE__)  ) );
+
+	    }
 
         /**
          *
